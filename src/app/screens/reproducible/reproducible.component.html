@@ -1,0 +1,37 @@
+<div class="appnav"><div class="wm"><img alt="" src="logo.png">GENESIS TRIAD</div><nav><span>Method</span><b>Reproducibility</b></nav></div>
+<div class="pad" style="position:relative">
+  <div class="toast" [class.show]="toast()">Re-run complete · identical result</div>
+  <div class="eyebrow">A measurement, not a conversation</div>
+  <h2 style="font-size:32px;margin:10px 0 6px">Same evidence. <em>Same score.</em> Every time.</h2>
+  <p class="muted" style="max-width:640px">A score that changes when nothing has changed can't tell you whether you're improving. So the evidence is frozen, every judgement is recorded, and the score is calculated by fixed rules.</p>
+  <div class="runs" style="margin-top:20px">
+    <div class="runbox">
+      <span class="chip">Typical AI-chat audit</span>
+      <h3 style="margin-top:10px">5 runs, same morning</h3>
+      <div class="small muted">Browses live each time, judges in one pass</div>
+      <div class="runlist">
+        @for (v of chatRuns; track $index) {
+          <div><span>Run {{ $index + 1 }}</span><span class="bar"><i [style.width]="width(v)" style="background:var(--sand)"></i></span><b>{{ v }}</b></div>
+        }
+      </div>
+      <div class="small" style="margin-top:10px;color:var(--deep)">Spread of 3 points — larger than most real changes.</div>
+    </div>
+    <div class="runbox" style="border:2px solid var(--teal)">
+      <span class="chip teal">Triad Audit Engine</span>
+      <h3 style="margin-top:10px">5 runs on SNP-2611-0417</h3>
+      <div class="small muted">Frozen evidence · recorded judgements · fixed scoring rules</div>
+      <div class="runlist">
+        @for (v of engineRuns(); track $index) {
+          <div><span>Run {{ $index + 1 }}</span><span class="bar"><i [style.width]="width(v)" style="background:var(--teal);transition:width .4s"></i></span><b>{{ v ?? '·' }}</b></div>
+        }
+      </div>
+      <div class="hash" style="margin-top:10px">result fingerprint · 7c1e…a90f (identical ×5)</div>
+    </div>
+  </div>
+  <div style="display:flex;gap:10px;margin-top:20px;align-items:center;flex-wrap:wrap">
+    <button id="run-again" class="btn ghost sm" (click)="rerun()">↻ Run it again</button>
+    <span class="small muted">When the score moves next month, you'll see exactly which evidence moved it.</span>
+    <span style="flex:1"></span>
+    <button class="btn red hot pulse" routerLink="/upgrade">Get the full audit →</button>
+  </div>
+</div>

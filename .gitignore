@@ -1,0 +1,30 @@
+# Client's copyrighted manuscript — never commit
+*.pdf
+# Internal Jemimo strategy notes about the client — never in this (public) wireframe repo
+Genesis_Triad_Evolution_Plan.md
+
+# Angular / Node
+node_modules/
+dist/
+.angular/
+/tmp
+/out-tsc
+/coverage
+npm-debug.log
+yarn-error.log
+
+# Editors
+.idea/
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# Local tooling
+.superpowers/
+.playwright-mcp/
+*.png
+!public/*.png
+.DS_Store
+Thumbs.db

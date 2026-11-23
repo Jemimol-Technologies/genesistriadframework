@@ -1,0 +1,14 @@
+# Genesis Triad — Triad Audit Engine.
+# Host ports belong to Command Centre: CC_JEMIMO_CONSULTING_GENESIS_TRIAD_WEB_PORT
+# in /workspace/.cc/sandbox.env (fallback 4920). Never hard-code a host port.
+# Run from a shell inside claude-sandbox (Docker-in-Docker).
+services:
+  genesis-triad-web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: genesis-triad-web:latest
+    container_name: genesis-triad-web
+    restart: unless-stopped
+    ports:
+      - "${BIND_IP:-127.0.0.1}:${CC_JEMIMO_CONSULTING_GENESIS_TRIAD_WEB_PORT:-4920}:4920"

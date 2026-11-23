@@ -1,0 +1,30 @@
+<div class="appnav"><div class="wm"><img alt="" src="logo.png">GENESIS TRIAD</div><nav><span>Alignment Diagnostic</span><b>FreshBox Kitchens</b></nav></div>
+        <div class="pad">
+          <div class="split split-report">
+            <div>
+              <div class="eyebrow">Genesis Triad Alignment Score™</div>
+              <div class="score" style="margin:10px 0 4px"><b>{{ s.total() }}</b><span>/ 15</span></div>
+              <p class="muted" style="margin:0 0 14px">Your leadership believed <b style="color:var(--ink)">12</b>. The evidence says <b style="color:var(--ink)">{{ s.total() }}</b>. That gap is your starting baseline.</p>
+              <div class="pillars" style="grid-template-columns:1fr">
+                <div class="pillar"><div class="k"><em>Promise</em> · Brand</div><div class="pb"><i [style.width.%]="s.pillars().promise / 6 * 100"></i></div><div class="small muted">Expectation {{ s.bands().expectation }} + Emotional {{ s.bands().emotional }} → {{ s.pillars().promise }} / 6</div></div>
+                <div class="pillar"><div class="k"><em>Proof</em> · Human Experience</div><div class="pb"><i [style.width.%]="s.pillars().proof / 6 * 100"></i></div><div class="small muted">Experience {{ s.bands().experience }} + Reliability {{ s.bands().reliability }} → {{ s.pillars().proof }} / 6</div></div>
+                <div class="pillar"><div class="k"><em>Echo</em> · Marketing</div><div class="pb"><i [style.width.%]="s.pillars().echo / 6 * 100"></i></div><div class="small muted">Expectation {{ s.bands().expectation }} + Commitment {{ s.bands().commitment }} → {{ s.pillars().echo }} / 6</div></div>
+              </div>
+            </div>
+            <div>
+              <h3 style="font-size:22px">What to fix first</h3>
+              <p class="small muted" style="margin:4px 0 4px">Weakest signal first. One correction at a time.</p>
+              <div class="fix"><div class="n">1</div><div><h3>Make the delivery promise true</h3><p>Replace “30 minutes” with your real window, or fix routing first. Fastest trust win.</p></div><div><span class="chip">Copy change · days</span></div></div>
+              <div class="fix"><div class="n">2</div><div><h3>Choose one price position</h3><p>Premium or value — then brief sales and retire the “cheapest” posts.</p></div><div><span class="chip">Leadership decision</span></div></div>
+              <div class="fix"><div class="n">3</div><div><h3>Close the portion-to-price gap</h3><p>Justify premium on the plate, or adjust portions.</p></div><div><span class="chip">Offer change</span></div></div>
+              <div class="fix" style="border-bottom:none"><div class="n">4</div><div><h3>Prove “chef-designed”</h3><p>Name and show the chef. Unsupported claims weaken Expectation.</p></div><div><span class="chip">Content · days</span></div></div>
+            </div>
+          </div>
+          <div class="sign" style="margin-top:18px"><div style="flex:1">Reviewed and signed by<div class="sig-name">Felix Chandran G</div><span class="small">{{ s.overridden().length }} of 5 bands adjusted in principal review · reasons recorded</span></div><div class="small" style="text-align:right">Snapshot SNP-2611-0417 + IE-2611-0052<br>Re-runnable · identical result</div></div>
+          <div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap">
+            <button class="btn ghost sm">Download PDF</button><button class="btn ghost sm">Share with team</button>
+            <span style="flex:1"></span>
+            <button class="btn ghost sm">Book GTMicro: fix #1–#2</button>
+            <button class="btn red hot pulse" routerLink="/monitor/freshbox">Keep it aligned →</button>
+          </div>
+        </div>

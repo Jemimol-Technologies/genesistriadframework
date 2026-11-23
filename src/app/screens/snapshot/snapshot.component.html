@@ -1,0 +1,40 @@
+<div class="appnav"><div class="wm"><img alt="" src="logo.png">GENESIS TRIAD</div><nav><span>Snapshot SNP-2611-0417</span><b>FreshBox Kitchens</b></nav></div>
+        <div class="pad">
+          <div class="split split-snap">
+            <div>
+              <div class="eyebrow">Free Triad Snapshot · outside-in</div>
+              <h2 style="font-size:28px;margin:8px 0 14px" [innerHTML]="sc().headline"></h2>
+              <div class="score"><b>{{ total() }}</b><span>/ 12 observable</span></div>
+              @if (sc().note) { <p class="small" style="margin-top:8px;color:var(--teal)">{{ sc().note }}</p> }
+              <p class="small muted" style="margin-top:8px">Public evidence can score four of the five signals. Commitment needs your own data, so it is shown as unknown — absence of evidence is absence of certainty.</p>
+              <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:10px"><span class="chip">519 evidence items</span><span class="chip">Lowest defensible band</span></div>
+            </div>
+            <div class="card" style="padding:8px 18px">
+              @for (r of rows(); track r.name) {
+                <div class="sig"><div class="nm">{{ r.name }}<small [innerHTML]="r.hint"></small></div><div class="bands b{{ r.band }}"><i></i><i></i><i></i><i></i></div><div class="val">{{ r.band }}<small>{{ bandLabel[r.band] }}</small></div></div>
+              }
+              <div class="sig"><div class="nm">Commitment<small>Return, renew, refer?</small></div><div class="bands unk"><i></i><i></i><i></i><i></i></div><div class="val">?<small>Needs your data</small></div></div>
+            </div>
+          </div>
+          <hr class="soft">
+          <div style="display:flex;justify-content:space-between;align-items:baseline"><h3 style="font-size:21px">{{ sc().findingsTitle }}</h3><span class="small muted">{{ sc().shown }}</span></div>
+          <div style="margin-top:12px">
+            @for (f of sc().findings; track f.title) {
+              <div class="finding" [class.hot]="f.opens" [class.pulse]="f.opens" [class.sq]="f.opens"
+                   [style.border-left-color]="kinds[f.kind].border" [style.cursor]="f.opens ? 'pointer' : null"
+                   (click)="f.opens && open()">
+                <div class="row">
+                  <div><span class="chip {{ kinds[f.kind].chip }}">{{ f.kindLabel ?? kinds[f.kind].label }}</span> <span class="chip">{{ f.signals }}</span><h3>{{ f.title }}</h3></div>
+                  @if (f.opens) { <span class="small" style="color:var(--red);white-space:nowrap">View evidence →</span> }
+                </div>
+                @if (f.vs) {
+                  <div class="vs"><div class="a" [innerHTML]="f.vs.promise"></div><div class="x" [style.color]="kinds[f.kind].vsColor">{{ f.vs.sym }}</div><div class="b" [innerHTML]="f.vs.proof"></div></div>
+                }
+              </div>
+            }
+          </div>
+          <div class="locked" style="margin-top:14px">
+            <div class="blur"><b>Prioritised corrections</b><br><span [innerHTML]="sc().lockedTeaser"></span><br>Full five-signal Alignment Score · Leadership intent · Assumption baseline</div>
+            <div class="over"><b style="font-family:var(--serif);font-size:19px;font-weight:400;max-width:520px">{{ sc().lockedPitch }}</b><button class="btn red" routerLink="/upgrade">{{ sc().cta }}</button></div>
+          </div>
+        </div>

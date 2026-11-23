@@ -1,0 +1,33 @@
+<div class="appnav"><div class="wm"><img alt="" src="logo.png">GENESIS TRIAD</div><nav><span>Step 2 of 2 · Collecting evidence</span></nav></div>
+<div class="pad">
+  <div class="eyebrow">Evidence precedes interpretation</div>
+  <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap">
+    <h2 style="font-size:32px;margin:10px 0 0">
+      @if (mode() === 'miss') { Collecting <em>public evidence</em> for FreshBox Kitchens }
+      @else { FreshBox Kitchens was <em>already scanned</em> }
+    </h2>
+  </div>
+  @if (mode() === 'miss') {
+    <p class="small muted" style="margin:8px 0 18px">No current snapshot of freshboxkitchens.demo, so we collect now. Anyone who asks about this brand in the next 30 days gets this same snapshot.</p>
+  } @else {
+    <div class="card" style="padding:14px 16px;margin:12px 0 18px;background:#e3efed;border-color:#c3dcd8">
+      <b>A current snapshot of freshboxkitchens.demo already exists.</b>
+      <div class="small muted">Taken 21 Nov 2026 · current until 21 Dec 2026 · showing it now, nothing new to collect. The next fresh reading is available from 21 Dec.</div>
+    </div>
+  }
+  <div>
+    @for (src of sources(); track src.name) {
+      <div class="src-row" [class.run]="src.state === 'run'" [class.done]="src.state === 'done'">
+        <div class="ic">✓</div>
+        <div><b>{{ src.name }}</b><br><span class="small muted">{{ src.detail }}</span></div>
+        <div class="cnt">{{ src.count }}</div>
+        <div class="st">{{ src.unit }}</div>
+      </div>
+    }
+  </div>
+  <div class="freeze" [class.on]="frozen()">
+    <div class="lock">⌘</div>
+    <div style="flex:1"><b>@if (mode() === 'hit') {Cached snapshot SNP-2611-0417} @else {Evidence frozen as snapshot SNP-2611-0417}</b><br><span class="small muted">21 Nov 2026, 10:42 IST · 519 items · every score from here on reads this exact snapshot · cached for 30 days</span></div>
+    <button class="btn red hot" [class.pulse]="frozen()" [disabled]="!frozen()" [style.opacity]="frozen() ? 1 : .4" routerLink="/r/SNP-2611-0417">See my snapshot →</button>
+  </div>
+</div>

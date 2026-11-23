@@ -1,0 +1,58 @@
+<div class="console">
+  <div class="side">
+    <div class="wm"><img alt="" src="logo.png">GENESIS TRIAD</div>
+    <a class="on">Review queue <b>2</b></a><a>Snapshots</a><a>Clients</a><a>Monitoring</a><a>Pattern library</a><a>Settings</a>
+    <div class="me"><b>Felix Chandran G</b>Principal</div>
+  </div>
+  <div class="main">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px">
+      <div>
+        <div class="eyebrow">FreshBox Kitchens · Alignment Diagnostic</div>
+        <h2 style="font-size:26px;margin:6px 0 2px">Signal review</h2>
+        <div class="hash">snapshot SNP-2611-0417 + inside evidence IE-2611-0052 · 731 items</div>
+      </div>
+      <div style="text-align:right">
+        <div class="small muted">Score after your calls</div>
+        <div style="font-family:var(--serif);font-size:38px;line-height:1">{{ s.total() }}<span style="font-size:18px;color:var(--grey)"> / 15</span></div>
+      </div>
+    </div>
+    <div class="rev-head">
+      <span>Signal</span><span>Band (dashed = AI)</span><span>Evidence</span><span>Confidence</span>
+    </div>
+
+    @for (r of rows; track r.key) {
+      <div class="rev">
+        <b>{{ r.name }} @if (r.confidence < threshold) {<span class="chip amber">check</span>}</b>
+        <div class="band-sel">
+          @for (b of bandValues; track b) {
+            <span [id]="'band-' + r.key + '-' + b" role="button" [class.ai]="s.proposed[r.key] === b"
+                  [class.on]="s.bands()[r.key] === b"
+                  [class.hot]="r.key === 'emotional' && b === 1"
+                  [class.pulse]="r.key === 'emotional' && b === 1 && !emotionalOverridden()"
+                  [class.sq]="r.key === 'emotional' && b === 1"
+                  (click)="s.setBand(r.key, b)">{{ b }}</span>
+          }
+        </div>
+        <div class="small">
+          {{ r.evidence }}
+          @if (r.key === 'emotional') {
+            <div class="override" [class.show]="emotionalOverridden()">Your call: {{ s.proposed.emotional }} → {{ s.bands().emotional }} · “Tone shift is a pattern across 3 months, not noise.” · logged 21 Nov, 15:12</div>
+          }
+        </div>
+        <div>
+          <div class="meter"><i [style.width.%]="r.confidence * 100" [style.background]="r.confidence < threshold ? 'var(--amber)' : 'var(--teal)'"></i></div>
+          <span class="small muted">{{ r.confidence.toFixed(2) }}@if (r.confidence < threshold) { · below {{ threshold.toFixed(2) }}}</span>
+        </div>
+      </div>
+    }
+
+    <div style="display:flex;gap:10px;align-items:center;margin-top:18px;flex-wrap:wrap">
+      <span class="small muted">
+        @if (emotionalOverridden()) { Override logged. The report will show which bands you adjusted, and why. }
+        @else { Tip: click a band to make your call — every override is logged with your reason. }
+      </span>
+      <span style="flex:1"></span>
+      <button class="btn teal hot" [class.pulse]="emotionalOverridden()" routerLink="/diagnostic/freshbox">Approve &amp; sign report ✓</button>
+    </div>
+  </div>
+</div>

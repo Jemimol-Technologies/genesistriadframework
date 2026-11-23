@@ -1,0 +1,296 @@
+{
+  "actors": [
+    {
+      "id": "brand",
+      "label": "Brand",
+      "chip": "Brand",
+      "color": "#8f1d1d",
+      "bg": "#fbe9e9"
+    },
+    {
+      "id": "engine",
+      "label": "Engine (automatic)",
+      "chip": "Engine",
+      "color": "#6d5a2e",
+      "bg": "#f3ede0"
+    },
+    {
+      "id": "felix",
+      "label": "Felix",
+      "chip": "Felix · Principal",
+      "color": "#176b63",
+      "bg": "#e3efed"
+    }
+  ],
+  "behaviour": {
+    "closeDrawerOnScenario": true,
+    "defaultDevice": "laptop",
+    "showDeviceSwitcher": true
+  },
+  "steps": [
+    {
+      "id": "arrive",
+      "title": "A brand <em>arrives</em>",
+      "actor": "brand",
+      "capture": {
+        "path": "/",
+        "actions": []
+      },
+      "what": "A founder lands from a LinkedIn post, a referral or a free-snapshot invitation. One field: their website.",
+      "why": "The hook is the Triad itself — not a logo or a website package. The first thing a brand buys is clarity about its own drift.",
+      "quote": {
+        "text": "AI lets you ship in weeks. It also ships your drift.",
+        "source": "genesistriadconsulting.com"
+      },
+      "hood": "Free and self-serve, so it can run at volume. Cost is bounded per brand: each brand is collected at most once per cache window.",
+      "hint": "Click Run my free snapshot"
+    },
+    {
+      "id": "details",
+      "title": "A few questions, <em>no sign-up</em>",
+      "actor": "brand",
+      "capture": {
+        "path": "/start",
+        "actions": []
+      },
+      "what": "The requester names the brand, says whose it is (mine / a competitor / a client), confirms their email in one click and states the brand's stage and promise. Anyone may audit any brand.",
+      "why": "Public evidence only, so competitor analysis is a legitimate use. There is no account to game: the account is kept internally and revealed only when needed. Ownership is proved later, when a paying brand connects its own data.",
+      "quote": {
+        "text": "The Zero Sprint establishes alignment by design, not by validation.",
+        "source": "The Genesis Triad, p. 258"
+      },
+      "hood": "The one-line promise is stored as the first Assumption claim. Every free run — answers and snapshot — becomes Genesis Triad research data, said plainly on the form.",
+      "hint": "Try A competitor, then click Confirm email & start collecting",
+      "baseLabel": "Own brand",
+      "states": [
+        {
+          "id": "competitor",
+          "label": "A competitor",
+          "note": "The requester audits a rival: the promise field becomes optional and the side card explains why that is fine.",
+          "capture": {
+            "path": "/start",
+            "actions": [
+              {
+                "kind": "click",
+                "target": "#whose-competitor",
+                "label": "A competitor"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "collect",
+      "title": "Collect, then <em>freeze</em>",
+      "actor": "engine",
+      "capture": {
+        "path": "/collect",
+        "actions": []
+      },
+      "what": "If the brand has no current snapshot, the engine gathers public evidence from six sources and freezes it. If it was scanned within the cache window, everyone gets that same snapshot.",
+      "why": "Every later score reads this exact snapshot. That is what makes the audit repeatable — and what lets a future change be traced to evidence, not to the AI's mood.",
+      "quote": {
+        "text": "Evidence precedes interpretation.",
+        "source": "The Genesis Triad, p. 253"
+      },
+      "hood": "Sources: live site, Wayback archive, Google Maps reviews, LinkedIn posts, Google search & AI overview, a scripted walk of public pages. Personal names removed before analysis. Snapshots are cached per brand domain for 30 days (a setting Felix controls); only paying and monitoring clients can force a fresh run.",
+      "hint": "Watch the sources complete (or try Already scanned), then click See my snapshot",
+      "baseLabel": "New brand",
+      "states": [
+        {
+          "id": "hit",
+          "label": "Already scanned",
+          "note": "Scanned within the cache window: everyone gets the same cached snapshot, no new collection.",
+          "capture": {
+            "path": "/collect?state=hit",
+            "actions": []
+          }
+        }
+      ]
+    },
+    {
+      "id": "snapshot",
+      "title": "The free <em>Triad Snapshot</em>",
+      "actor": "brand",
+      "capture": {
+        "path": "/r/SNP-2611-0417",
+        "actions": []
+      },
+      "what": "Four of the five alignment signals, scored from public evidence, plus the top drifts. Commitment is shown as unknown.",
+      "why": "Honest by construction: public evidence cannot see repeat purchase or renewal, so the snapshot says so instead of guessing. That gap is exactly what the paid audit fills.",
+      "quote": {
+        "text": "When in doubt, the system defaults to the lowest band supported by evidence.",
+        "source": "The Genesis Triad, p. 247"
+      },
+      "hood": "Each evidence item is classified into a signal and a band by a typed decision model; bands roll up by fixed rules. Each finding also carries a direction — promise ahead of proof (drift) or proof ahead of promise (under-told) — so a high score can still flag over-delivery.",
+      "hint": "Try the other readings, then on Pulling apart click the first finding",
+      "baseLabel": "Pulling apart",
+      "states": [
+        {
+          "id": "almost",
+          "label": "Almost there",
+          "note": "Mostly aligned; one promise slips at weekends.",
+          "capture": {
+            "path": "/r/SNP-2611-0417?state=almost",
+            "actions": []
+          }
+        },
+        {
+          "id": "aligned",
+          "label": "Perfectly aligned",
+          "note": "Promise and proof match on every public signal; the full audit confirms it.",
+          "capture": {
+            "path": "/r/SNP-2611-0417?state=aligned",
+            "actions": []
+          }
+        },
+        {
+          "id": "over",
+          "label": "Over-delivering",
+          "note": "Proof ahead of promise: under-told strengths the brand is not claiming.",
+          "capture": {
+            "path": "/r/SNP-2611-0417?state=over",
+            "actions": []
+          }
+        }
+      ]
+    },
+    {
+      "id": "receipts",
+      "title": "No source, <em>no finding</em>",
+      "actor": "brand",
+      "capture": {
+        "path": "/r/SNP-2611-0417/f1",
+        "actions": []
+      },
+      "what": "Every finding opens to its receipts: the claim, where and when it was captured, and the evidence that contradicts it.",
+      "why": "This is what separates an audit from an opinion. A brand can check every line — and so can Felix.",
+      "quote": {
+        "text": "Patterns override opinion. Single incidents do not define alignment.",
+        "source": "The Genesis Triad, p. 253"
+      },
+      "hood": "Verdicts carry a calibrated confidence. A finding needs a repeated pattern, not one review. Raw third-party text is kept only while the snapshot is live; the finding itself is kept permanently.",
+      "hint": "Click How sure can I be of this score?"
+    },
+    {
+      "id": "repeatable",
+      "title": "Same evidence, <em>same score</em>",
+      "actor": "brand",
+      "capture": {
+        "path": "/method",
+        "actions": []
+      },
+      "what": "The same audit run five times gives the same score — because evidence is frozen, judgements are recorded and scoring follows fixed rules.",
+      "why": "This answers the problem with chat-based AI audits: a score that wobbles on its own can't power a Deviation Score. Try “Run it again”.",
+      "quote": {
+        "text": "Alignment is therefore not negotiated, it is measured.",
+        "source": "The Genesis Triad, p. 260"
+      },
+      "hood": "Each decision is stored against its exact input and model version. A re-run reads the stored decision.",
+      "hint": "Try Run it again, then Get the full audit"
+    },
+    {
+      "id": "upgrade",
+      "title": "From snapshot to <em>diagnosis</em>",
+      "actor": "brand",
+      "capture": {
+        "path": "/upgrade",
+        "actions": []
+      },
+      "what": "The hidden account reveals itself with the requester's snapshot history, and the brand upgrades to the Alignment Diagnostic at Felix's published fee.",
+      "why": "The free snapshot creates the need; the paid audit adds what only the brand has and what only Felix can judge.",
+      "quote": {
+        "text": "Principal-led consulting. Start with a fixed-fee diagnostic.",
+        "source": "genesistriadconsulting.com"
+      },
+      "hood": "Card or UPI payment, GST invoice. Introductory pricing as on the live site. The free snapshot carries over as the before-picture; a login exists only from here on.",
+      "hint": "Click Start the full audit"
+    },
+    {
+      "id": "connect",
+      "title": "Inside <em>evidence</em> and intent",
+      "actor": "brand",
+      "capture": {
+        "path": "/diagnostic/evidence",
+        "actions": []
+      },
+      "what": "The brand connects analytics, uploads business metrics, and each leader answers five intent questions. A session with Felix is booked.",
+      "why": "Inside data completes all five signals. Leaders' answers become the Assumption Score — what they believed before the evidence.",
+      "quote": {
+        "text": "How aligned did we believe we were when we began?",
+        "source": "The Genesis Triad, p. 242"
+      },
+      "hood": "Confidential inputs stay in the brand's private workspace and are never used for another client.",
+      "hint": "Click Submit for analysis"
+    },
+    {
+      "id": "queue",
+      "title": "Felix's <em>review queue</em>",
+      "actor": "felix",
+      "capture": {
+        "path": "/console/queue",
+        "actions": []
+      },
+      "what": "Felix sees every paid audit waiting for him, with the proposed score and how many low-confidence calls need his judgement.",
+      "why": "The engine does the legwork; the principal makes the calls. Free snapshots go out automatically; paid audits never do.",
+      "quote": {
+        "text": "AI suggests. Humans decide.",
+        "source": "The Genesis Triad, p. 298"
+      },
+      "hood": "Calls below a confidence threshold are routed to Felix first.",
+      "hint": "Click FreshBox Kitchens"
+    },
+    {
+      "id": "review",
+      "title": "The principal's <em>call</em>",
+      "actor": "felix",
+      "capture": {
+        "path": "/console/review/freshbox",
+        "actions": []
+      },
+      "what": "Felix reviews each signal's proposed band with its evidence and confidence. Two are flagged. He moves Emotional from 2 to 1.",
+      "why": "Overrides are allowed — and recorded with a reason. Over time, Felix's calls also measure how accurate the engine is.",
+      "quote": {
+        "text": "Leadership may override alignment signals only by explicitly acknowledging the deviation.",
+        "source": "The Genesis Triad, p. 242"
+      },
+      "hood": "Every override is logged: who, when, from, to, why.",
+      "hint": "Click band 1 on Emotional, then Approve & sign"
+    },
+    {
+      "id": "report",
+      "title": "The signed <em>report</em>",
+      "actor": "brand",
+      "capture": {
+        "path": "/diagnostic/freshbox",
+        "actions": []
+      },
+      "what": "The full Alignment Score with pillar views, belief versus evidence, and corrections ranked weakest-signal first — signed by Felix.",
+      "why": "The report sells the next step on evidence: GTMicro for targeted fixes, GT90 when drift is systemic.",
+      "quote": {
+        "text": "Fix the weakest signal first.",
+        "source": "The Genesis Triad, p. 35"
+      },
+      "hood": "The report names its snapshot and is re-runnable to the same result.",
+      "hint": "Click Keep it aligned"
+    },
+    {
+      "id": "monitor",
+      "title": "Keep it <em>aligned</em>",
+      "actor": "brand",
+      "capture": {
+        "path": "/monitor/freshbox",
+        "actions": []
+      },
+      "what": "Regular re-scans track the score against the belief baseline and flag new drift — like a campaign that breaks the corrected promise.",
+      "why": "The recurring part. Drift never stops, so neither does the value: each cycle shows what improved and what needs fixing next.",
+      "quote": {
+        "text": "Alignment, when treated as a discipline rather than a one-time audit, becomes one of the most powerful safeguards.",
+        "source": "The Genesis Triad, p. 256"
+      },
+      "hood": "Each re-scan is a new frozen snapshot; changes come with an evidence diff.",
+      "hint": "End of story · Start again anytime"
+    }
+  ]
+}

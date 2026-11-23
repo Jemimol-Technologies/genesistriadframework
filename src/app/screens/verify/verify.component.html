@@ -1,0 +1,38 @@
+<div class="appnav"><div class="wm"><img alt="" src="logo.png">GENESIS TRIAD</div><nav><span>Step 1 of 2 · About this brand</span></nav></div>
+        <div class="pad grid2">
+          <div>
+            <div class="eyebrow">Before we look</div>
+            <h2 style="font-size:32px;margin:10px 0 8px">A few questions, then we <em>collect the evidence.</em></h2>
+            <p class="muted">No sign-up, no password. We'll send the snapshot to your email.</p>
+            <div class="field" style="margin-top:20px"><label>Brand to audit</label><input class="input" value="freshboxkitchens.demo"></div>
+            <div class="field"><label>Whose brand is it?</label>
+              <div class="seg">
+                @for (o of options; track o.value) {
+                  <span [id]="'whose-' + o.value" role="button" [class.on]="whose() === o.value" style="cursor:pointer" (click)="whose.set(o.value)">{{ o.label }}</span>
+                }
+              </div>
+            </div>
+            <div class="field"><label>Your email</label><input class="input" value="priya&#64;freshboxkitchens.demo"></div>
+            <div class="field"><label>Where is the brand right now?</label><div class="seg"><span>New — launching</span><span class="on">Improve — refreshing</span><span>Expand — new offer</span></div></div>
+            <div class="field"><label>{{ promiseLabel() }}</label><input class="input" [value]="whose() === 'competitor' ? '' : 'Premium, chef-designed meals delivered fresh in 30 minutes'" placeholder="Leave blank and we'll read it from their site"></div>
+            <div class="field"><label>Who is the customer?</label><input class="input" value="Busy professionals in Bengaluru, 25–40"></div>
+            <button class="btn red hot pulse" routerLink="/collect">Confirm email &amp; start collecting →</button>
+            <p class="small muted" style="margin-top:12px;max-width:460px">The snapshot is free. In return, we keep it and your answers, use them in anonymised research, and may follow up about Genesis Triad services. Ask us to delete your details anytime.</p>
+          </div>
+          <div class="card" style="padding:22px;background:#fafaf8;align-self:start">
+            <div class="eyebrow" style="color:var(--teal)">What we will look at</div>
+            <ul style="padding-left:18px;margin:12px 0;font-size:14px;line-height:1.9">
+              <li>The website today — and how it changed over time</li>
+              <li>Public customer reviews</li>
+              <li>The company's and founder's public posts</li>
+              <li>What search engines say about the brand</li>
+              <li>A walk through the public sign-up &amp; checkout</li>
+            </ul>
+            <hr class="soft">
+            @if (whose() === 'competitor') {
+              <div class="small muted"><b style="color:var(--ink)">Auditing a competitor?</b> Public evidence only, so that's fine. We also read the promise they make on their own site, and compare it with what you think they promise.</div>
+            } @else {
+              <div class="small muted"><b style="color:var(--ink)">The one-line promise matters.</b> It becomes the stated intent we compare the evidence against — the start of the Assumption baseline.</div>
+            }
+          </div>
+        </div>

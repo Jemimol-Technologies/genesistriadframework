@@ -1,0 +1,7 @@
+node_modules
+dist
+.angular
+*.pdf
+.git
+.superpowers
+.playwright-mcp
