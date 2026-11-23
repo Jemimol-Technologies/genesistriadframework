@@ -23,5 +23,7 @@ export class ReviewScreenComponent {
     { key: 'emotional', name: 'Emotional', confidence: 0.62, evidence: '★ 3.9 avg · tone shifting “confused” → “annoyed” in last 60 days' },
     { key: 'commitment', name: 'Commitment', confidence: 0.66, evidence: 'Repeat orders 24% (90 days) · referral 3%' },
   ];
+  /** Confidence is stored 0–1 (as the decision model returns it) and shown as a percentage. */
+  pct(v: number): string { return `${Math.round(v * 100)}%`; }
   readonly emotionalOverridden = computed(() => this.s.bands().emotional !== this.s.proposed.emotional);
 }

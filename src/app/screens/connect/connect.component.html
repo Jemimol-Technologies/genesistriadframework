@@ -5,10 +5,15 @@
             <h2 style="font-size:30px;margin:10px 0 8px">What only <em>you</em> can show us</h2>
             <p class="muted small">Connect what you have. Anything you skip is scored conservatively — never guessed.</p>
             <div style="margin-top:16px">
-              <div class="conn"><div class="lg">SC</div><div><b>Search Console</b><br><span class="small muted">What people search before they find you</span></div><span class="st-ok">Connected ✓</span></div>
-              <div class="conn"><div class="lg">GA</div><div><b>Website analytics</b><br><span class="small muted">Sign-up and checkout drop-off</span></div><span class="st-ok">Connected ✓</span></div>
-              <div class="conn"><div class="lg">CSV</div><div><b>Business metrics</b><br><span class="small muted">Repeat orders, on-time %, NPS — template provided</span></div><span class="st-ok">Uploaded ✓</span></div>
-              <div class="conn"><div class="lg">☏</div><div><b>Support conversations</b><br><span class="small muted">Optional — tagged export from your helpdesk</span></div><button class="btn ghost sm">Add</button></div>
+              @for (s of sources(); track s.id) {
+                <div class="conn"><div class="lg">{{ s.mark }}</div><div><b>{{ s.name }}</b><br><span class="small muted">{{ s.detail }}</span></div>
+                  @if (s.done) {
+                    <span class="st-ok">{{ s.kind === 'upload' ? 'Uploaded' : s.kind === 'add' ? 'Added' : 'Connected' }} ✓</span>
+                  } @else {
+                    <button [id]="'source-' + s.id" class="btn sm" [class.ghost]="s.optional" (click)="addSource(s.id)">{{ s.kind === 'upload' ? 'Upload' : s.kind === 'add' ? 'Add' : 'Connect' }}</button>
+                  }
+                </div>
+              }
             </div>
           </div>
           <div>
@@ -16,16 +21,49 @@
               <div class="eyebrow" style="color:var(--teal)">Leadership intent</div>
               <h3 style="font-size:20px;margin:8px 0 6px">What did you <em>mean</em> to promise?</h3>
               <p class="small muted">Five short questions for each leader. Your answers become the Assumption Score — what you believed before the evidence.</p>
-              <div style="margin:12px 0;font-size:13.5px;line-height:2">
-                <div>✓ Priya R. · Founder <span class="chip teal" style="float:right">done</span></div>
-                <div>✓ Arjun M. · Sales lead <span class="chip teal" style="float:right">done</span></div>
-                <div>◌ Meera S. · Operations <span class="chip" style="float:right">invited</span></div>
+              <div class="leaders">
+                <div class="leader">
+                  <div><b>{{ me.name }}</b><span class="muted">&nbsp;(you)</span><div class="small muted">{{ me.email }}</div></div>
+                  @if (myAnswers() === 'done') {
+                    <span class="chip teal">5 of 5 answered</span>
+                  } @else {
+                    <button id="answer-mine" class="btn sm" (click)="myAnswers.set('done')">Answer now</button>
+                  }
+                </div>
+                @for (l of leaders(); track l.email) {
+                  <div class="leader">
+                    <div><b>{{ l.name }}</b>@if (l.role) {<span class="muted">&nbsp;· {{ l.role }}</span>}<div class="small muted">{{ l.email }}</div></div>
+                    @if (l.status === 'done') {<span class="chip teal">5 of 5 answered</span>} @else {<span class="chip">invited · 0 of 5</span>}
+                  </div>
+                }
               </div>
+
+              @if (adding()) {
+                <div class="add-leader">
+                  <div class="add-grid">
+                    <input id="leader-name" class="input" placeholder="Name" [value]="draft().name" (input)="set('name', $any($event.target).value)">
+                    <input id="leader-role" class="input" placeholder="Role, e.g. Sales lead" [value]="draft().role" (input)="set('role', $any($event.target).value)">
+                  </div>
+                  <input id="leader-email" class="input" type="email" placeholder="Work email" [value]="draft().email" (input)="set('email', $any($event.target).value)">
+                  <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+                    <button id="send-invite" class="btn sm" [disabled]="!canSend()" [style.opacity]="canSend() ? 1 : .4" (click)="sendInvite()">Send invite</button>
+                    <button class="btn ghost sm" (click)="adding.set(false)">Cancel</button>
+                    <span class="small muted">They get a private link to the five questions. Their answers are not shown to each other.</span>
+                  </div>
+                </div>
+              } @else {
+                <button id="add-leader" class="btn ghost sm" style="margin-top:10px" (click)="startAdding()">+ Add a leader</button>
+                @if (leaders().length === 0) {
+                  <p class="small muted" style="margin:8px 0 0">Add the people who shape what you promise: sales, operations, marketing. The gap between their answers is part of the finding.</p>
+                }
+              }
               <hr class="soft">
               <b style="font-size:13.5px">Intent session with Felix</b>
-              <div class="seg" style="margin-top:8px"><span>Tue 25 · 11:00</span><span class="on">Wed 26 · 15:00</span><span>Thu 27 · 10:00</span></div>
+              <div class="seg" style="margin-top:8px"><span>Tue 24 · 11:00</span><span class="on">Wed 25 · 15:00</span><span>Thu 26 · 10:00</span></div>
             </div>
-            <button class="btn red hot pulse" style="margin-top:16px" routerLink="/console/queue">Submit for analysis →</button>
+            <button id="submit-analysis" class="btn red hot" [class.pulse]="canSubmit()" [disabled]="!canSubmit()" style="margin-top:16px"
+                    [style.opacity]="canSubmit() ? 1 : .4" [style.cursor]="canSubmit() ? 'pointer' : 'not-allowed'" routerLink="/diagnostic/submitted">Submit for analysis →</button>
+            @if (!canSubmit()) { <div class="small muted" style="margin-top:8px">Connect your data and answer your five questions to submit.</div> }
             <div class="small muted" style="margin-top:8px">Confidential inputs are kept in your private workspace and never used for another client.</div>
           </div>
         </div>

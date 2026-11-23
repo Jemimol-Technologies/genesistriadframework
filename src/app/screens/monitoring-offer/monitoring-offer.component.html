@@ -1,0 +1,41 @@
+<gt-modal labelledBy="monitoring-title" closeId="close-monitoring" closeLabel="Close and go back to the report" (dismissed)="back()">
+  <div class="pad">
+    <div class="eyebrow">Genesis Triad Monitoring</div>
+    <h2 id="monitoring-title" style="font-size:32px;margin:10px 0 8px;padding-right:36px">Keep your promises <em>true</em> as you grow.</h2>
+    <p class="muted" style="max-width:680px;margin:0">Drift does not stop after one audit. A new campaign, a new city or a new agency can pull a promise apart again. Monitoring re-checks the evidence and tells you as soon as one starts slipping.</p>
+
+    <div class="grid2" style="margin-top:22px">
+      <div class="plan hl">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap">
+          <div class="eyebrow">How often we re-check</div>
+          <div class="seg">
+            <span id="cadence-monthly" role="button" style="cursor:pointer" [class.on]="cadence() === 'monthly'" (click)="cadence.set('monthly')">Monthly</span>
+            <span id="cadence-quarterly" role="button" style="cursor:pointer" [class.on]="cadence() === 'quarterly'" (click)="cadence.set('quarterly')">Quarterly</span>
+          </div>
+        </div>
+        <div class="price" style="margin-top:10px;font-size:26px">Price set by Felix</div>
+        <div class="small muted">{{ cadence() === 'monthly' ? 'Billed monthly' : 'Billed every quarter' }} · cancel anytime</div>
+        <ul>
+          <li>Fresh evidence from the same sources as your audit, frozen each time</li>
+          <li>Your score tracked against your leaders’ starting line</li>
+          <li>An alert as soon as something you say stops matching what customers get</li>
+          <li>Felix reviews every alert before it reaches you</li>
+          <li>A short “what changed” report {{ cadence() === 'monthly' ? 'every month' : 'every quarter' }}</li>
+        </ul>
+        <button id="start-monitoring" class="btn red hot pulse" style="margin-top:16px;width:100%" routerLink="/monitor/freshbox" [queryParams]="cadence() === 'quarterly' ? { cadence: 'quarterly' } : {}">Start monitoring →</button>
+      </div>
+
+      <div class="card" style="padding:20px;background:#fafaf8;align-self:start">
+        <div class="eyebrow" style="color:var(--teal)">Your leaders’ time</div>
+        <h3 style="font-size:19px;margin:8px 0 6px">No monthly questionnaires</h3>
+        <p class="small muted" style="margin:0 0 10px">Your leaders’ answers from 25 Nov stay your starting line, so every re-check measures real change, not changed opinions. We only ask again when:</p>
+        <ul class="plain-list">
+          <li>your promise changes: a new offer, city or campaign</li>
+          <li>a new leader joins (just that person)</li>
+          <li>once a year, at renewal</li>
+        </ul>
+        <p class="small muted" style="margin:10px 0 0">Each quarter, one question to each leader: <i>“Has anything you promise customers changed?”</i> A yes sends that person the five questions.</p>
+      </div>
+    </div>
+  </div>
+</gt-modal>

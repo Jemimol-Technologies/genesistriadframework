@@ -1,0 +1,62 @@
+<div class="appnav"><div class="wm"><img alt="" src="logo.png">GENESIS TRIAD</div><nav><span>Alignment Diagnostic</span><b>{{ ready() ? 'Report ready' : 'Submitted' }}</b></nav></div>
+<div class="pad grid2">
+  <div>
+    @if (ready()) {
+      <div class="eyebrow">Signed · Thu 3 Dec 2026</div>
+      <h2 style="font-size:32px;margin:10px 0 8px">Your signed report <em>is ready.</em></h2>
+      <p class="muted">Felix has reviewed every score and signed it. We have also emailed it to priya&#64;freshboxkitchens.demo.</p>
+    } @else {
+      <div class="eyebrow">Submitted · Mon 23 Nov 2026</div>
+      <h2 style="font-size:32px;margin:10px 0 8px">Your diagnostic is <em>with Felix</em> now.</h2>
+      <p class="muted">Nothing more to do today. We will email priya&#64;freshboxkitchens.demo at each step.</p>
+    }
+
+    <div class="eyebrow" style="color:var(--ink);margin:26px 0 4px">{{ ready() ? 'How we got here' : 'What happens next' }}</div>
+    <ol class="next-steps">
+      <li class="done"><b>Evidence submitted</b><span class="small muted">{{ ready() ? 'Mon 23 Nov' : 'Today' }}</span></li>
+      <li [class.done]="ready()" [class.now]="!ready()"><b>Felix reviews every score against your evidence</b><span class="small muted">{{ ready() ? 'Done · ' + s.signedOverridden().length + ' of 5 scores adjusted, each with his reason' : 'This week. He checks the calls the engine is least sure about first.' }}</span></li>
+      <li [class.done]="ready()"><b>Your intent session with Felix</b><span class="small muted">{{ ready() ? 'Wed 25 Nov · all three leaders’ answers in' : 'Wed 25 Nov · 15:00 · 45 minutes, video call' }}</span></li>
+      <li [class.done]="ready()"><b>Your signed report</b><span class="small muted">{{ ready() ? 'Signed Thu 3 Dec' : 'We email you when it is ready, typically within 10 working days.' }}</span></li>
+    </ol>
+    @if (!ready()) {
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:18px">
+        <button id="add-to-calendar" class="btn ghost sm">Add the session to my calendar</button>
+      </div>
+    }
+  </div>
+
+  @if (ready()) {
+  <div>
+    <div class="card report-ready">
+      <div class="eyebrow" style="color:var(--teal)">Your Genesis Triad Alignment Score™</div>
+      <div class="score" style="margin:10px 0 2px"><b>{{ s.signedTotal() }}</b><span>/ 15</span></div>
+      <p class="small muted" style="margin:0 0 14px">Your leaders believed 12. The evidence says {{ s.signedTotal() }}. That gap is your starting line.</p>
+      <div class="sum-row"><span>What to fix first</span><b>Make the delivery promise true</b></div>
+      <div class="sum-row"><span>Corrections in the report</span><span>4, weakest first</span></div>
+      <div class="sum-row" style="border-bottom:none"><span>Signed by</span><span class="sig-inline">Felix Chandran G</span></div>
+      <button id="open-report" class="btn red hot pulse" style="width:100%;margin-top:16px" routerLink="/diagnostic/freshbox">Open your signed report →</button>
+      <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;justify-content:center"><button class="btn ghost sm">Download PDF</button><button class="btn ghost sm">Share with team</button></div>
+    </div>
+    <div class="small muted" style="margin-top:10px">Confidential inputs are kept in your private workspace and never used for another client.</div>
+  </div>
+  } @else {
+  <div>
+    <div class="card" style="padding:20px">
+      <div class="eyebrow" style="color:var(--teal)">What Felix has</div>
+      <div class="sum-row"><span>Search Console</span><span class="st-ok">Connected ✓</span></div>
+      <div class="sum-row"><span>Website analytics</span><span class="st-ok">Connected ✓</span></div>
+      <div class="sum-row"><span>Business metrics</span><span class="st-ok">Uploaded ✓</span></div>
+      <div class="sum-row"><span>Support conversations</span><span class="small muted">Skipped · scored conservatively</span></div>
+      <div class="sum-row"><span>Your free snapshot SNP-2611-0417</span><span class="small muted">The “before” picture</span></div>
+
+      <div class="eyebrow" style="color:var(--teal);margin-top:18px">Leaders’ answers</div>
+      <div class="sum-row"><span>Priya R. (you)</span><span class="chip teal">5 of 5</span></div>
+      <div class="sum-row"><span>Arjun M. · Sales lead</span><span class="chip teal">5 of 5</span></div>
+      <div class="sum-row"><span>Meera S. · Operations</span><span class="chip">invited · 0 of 5</span></div>
+      <p class="small muted" style="margin:10px 0 0">Meera can still answer until the session. We will remind her on Tuesday.</p>
+      <button id="remind-meera" class="btn ghost sm" style="margin-top:10px">Remind Meera now</button>
+    </div>
+    <div class="small muted" style="margin-top:10px">Confidential inputs are kept in your private workspace and never used for another client.</div>
+  </div>
+  }
+</div>

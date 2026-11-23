@@ -3,12 +3,12 @@
           <div class="split split-report">
             <div>
               <div class="eyebrow">Genesis Triad Alignment Score™</div>
-              <div class="score" style="margin:10px 0 4px"><b>{{ s.total() }}</b><span>/ 15</span></div>
-              <p class="muted" style="margin:0 0 14px">Your leadership believed <b style="color:var(--ink)">12</b>. The evidence says <b style="color:var(--ink)">{{ s.total() }}</b>. That gap is your starting baseline.</p>
+              <div class="score" style="margin:10px 0 4px"><b>{{ s.signedTotal() }}</b><span>/ 15</span></div>
+              <p class="muted" style="margin:0 0 14px">Your leadership believed <b style="color:var(--ink)">12</b>. The evidence says <b style="color:var(--ink)">{{ s.signedTotal() }}</b>. That gap is your starting baseline.</p>
               <div class="pillars" style="grid-template-columns:1fr">
-                <div class="pillar"><div class="k"><em>Promise</em> · Brand</div><div class="pb"><i [style.width.%]="s.pillars().promise / 6 * 100"></i></div><div class="small muted">Expectation {{ s.bands().expectation }} + Emotional {{ s.bands().emotional }} → {{ s.pillars().promise }} / 6</div></div>
-                <div class="pillar"><div class="k"><em>Proof</em> · Human Experience</div><div class="pb"><i [style.width.%]="s.pillars().proof / 6 * 100"></i></div><div class="small muted">Experience {{ s.bands().experience }} + Reliability {{ s.bands().reliability }} → {{ s.pillars().proof }} / 6</div></div>
-                <div class="pillar"><div class="k"><em>Echo</em> · Marketing</div><div class="pb"><i [style.width.%]="s.pillars().echo / 6 * 100"></i></div><div class="small muted">Expectation {{ s.bands().expectation }} + Commitment {{ s.bands().commitment }} → {{ s.pillars().echo }} / 6</div></div>
+                <div class="pillar"><div class="k"><em>Promise</em> · Brand</div><div class="pb"><i [style.width.%]="s.signedPillars().promise / 6 * 100"></i></div><div class="small muted">Expectation {{ s.signedBands().expectation }} + Emotional {{ s.signedBands().emotional }} → {{ s.signedPillars().promise }} / 6</div></div>
+                <div class="pillar"><div class="k"><em>Proof</em> · Human Experience</div><div class="pb"><i [style.width.%]="s.signedPillars().proof / 6 * 100"></i></div><div class="small muted">Experience {{ s.signedBands().experience }} + Reliability {{ s.signedBands().reliability }} → {{ s.signedPillars().proof }} / 6</div></div>
+                <div class="pillar"><div class="k"><em>Echo</em> · Marketing</div><div class="pb"><i [style.width.%]="s.signedPillars().echo / 6 * 100"></i></div><div class="small muted">Expectation {{ s.signedBands().expectation }} + Commitment {{ s.signedBands().commitment }} → {{ s.signedPillars().echo }} / 6</div></div>
               </div>
             </div>
             <div>
@@ -20,11 +20,46 @@
               <div class="fix" style="border-bottom:none"><div class="n">4</div><div><h3>Prove “chef-designed”</h3><p>Name and show the chef. Unsupported claims weaken Expectation.</p></div><div><span class="chip">Content · days</span></div></div>
             </div>
           </div>
-          <div class="sign" style="margin-top:18px"><div style="flex:1">Reviewed and signed by<div class="sig-name">Felix Chandran G</div><span class="small">{{ s.overridden().length }} of 5 bands adjusted in principal review · reasons recorded</span></div><div class="small" style="text-align:right">Snapshot SNP-2611-0417 + IE-2611-0052<br>Re-runnable · identical result</div></div>
+          <hr class="soft" style="margin:26px 0 18px">
+          <div class="sheet-head">
+            <div>
+              <div class="eyebrow">Triad Connection Sheet</div>
+              <h3 style="font-size:22px;margin:6px 0 4px">Every promise you make, traced</h3>
+              <p class="small muted" style="margin:0;max-width:640px">For each promise: what you say, what customers actually get, and what everyone else hears. Every cell names its evidence.</p>
+            </div>
+            <div class="sheet-counts">
+              <span class="small muted">{{ sheet.length }} promises · {{ evidenceTotal }} evidence items</span>
+              <div>@for (c of counts; track c.v) {<span class="chip {{ verdict[c.v].chip }}">{{ c.n }} {{ verdict[c.v].label.toLowerCase() }}</span>}</div>
+            </div>
+          </div>
+          <div class="sheet" role="table" aria-label="Triad Connection Sheet">
+            <div class="sheet-row sheet-cols" role="row">
+              <span role="columnheader">Promise topic</span>
+              <span role="columnheader"><em>Promise</em> · what you say</span>
+              <span role="columnheader"><em>Proof</em> · what customers get</span>
+              <span role="columnheader"><em>Echo</em> · what others hear</span>
+              <span role="columnheader">Verdict</span>
+            </div>
+            @for (r of sheet; track r.topic) {
+              <div class="sheet-row" role="row" [style.border-left-color]="verdict[r.verdict].border">
+                <div class="sheet-topic" role="cell"><b>{{ r.topic }}</b><span class="small muted">{{ r.signals }}</span></div>
+                <div class="sheet-cell" role="cell"><span class="sheet-k"><em>Promise</em> · what you say</span>{{ r.promise.text }}<small>{{ r.promise.source }}</small></div>
+                <div class="sheet-cell" role="cell"><span class="sheet-k"><em>Proof</em> · what customers get</span>{{ r.proof.text }}<small>{{ r.proof.source }}</small></div>
+                <div class="sheet-cell" role="cell"><span class="sheet-k"><em>Echo</em> · what others hear</span>{{ r.echo.text }}<small>{{ r.echo.source }}</small></div>
+                <div class="sheet-verdict" role="cell">
+                  <span class="chip {{ verdict[r.verdict].chip }}">{{ verdict[r.verdict].label }}</span>
+                  @if (r.fix) {<span class="small">Fix #{{ r.fix }}</span>} @else if (r.verdict !== 'holding') {<span class="small muted">In the full list</span>} @else {<span class="small muted">Keep doing this</span>}
+                  <span class="small muted">{{ r.evidence }} items</span>
+                </div>
+              </div>
+            }
+          </div>
+          <div class="sign" style="margin-top:18px"><div style="flex:1">Reviewed and signed by<div class="sig-name">Felix Chandran G</div><span class="small">{{ s.signedOverridden().length }} of 5 bands adjusted in principal review · reasons recorded</span></div><div class="small" style="text-align:right">Snapshot SNP-2611-0417 + IE-2611-0052<br>Re-runnable · identical result</div></div>
           <div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap">
             <button class="btn ghost sm">Download PDF</button><button class="btn ghost sm">Share with team</button>
             <span style="flex:1"></span>
             <button class="btn ghost sm">Book GTMicro: fix #1–#2</button>
-            <button class="btn red hot pulse" routerLink="/monitor/freshbox">Keep it aligned →</button>
+            <button id="keep-aligned" class="btn red hot pulse" routerLink="/diagnostic/freshbox/monitoring">Keep it aligned →</button>
           </div>
         </div>
+<router-outlet />

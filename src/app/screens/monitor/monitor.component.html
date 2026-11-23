@@ -1,42 +1,101 @@
 <div class="appnav"><div class="wm"><img alt="" src="logo.png">GENESIS TRIAD</div><nav><span>Monitoring</span><b>FreshBox Kitchens</b></nav></div>
-        <div class="pad">
-          <div class="eyebrow">Alignment over time</div>
-          <h2 style="font-size:30px;margin:10px 0 16px">Is the gap <em>shrinking or widening?</em></h2>
-          <div class="split split-monitor">
-            <div class="card" style="padding:18px">
-              <div style="display:flex;justify-content:space-between;font-size:12.5px" class="muted"><span>Alignment Score (observed) vs Assumption (believed)</span><span>monthly re-scan</span></div>
-              <svg viewBox="0 0 520 220" style="width:100%;height:auto;margin-top:8px" role="img" aria-label="Alignment score rising from 6 to 10 over four months, assumption fixed at 12">
-                <g font-family="Arial" font-size="10" fill="#777">
-                  <line x1="40" y1="20" x2="500" y2="20" stroke="#ecebe7"/><text x="10" y="24">15</text>
-                  <line x1="40" y1="80" x2="500" y2="80" stroke="#ecebe7"/><text x="10" y="84">10</text>
-                  <line x1="40" y1="140" x2="500" y2="140" stroke="#ecebe7"/><text x="16" y="144">5</text>
-                  <line x1="40" y1="200" x2="500" y2="200" stroke="#dddcd8"/><text x="16" y="204">0</text>
-                  <text x="60" y="216">Nov</text><text x="200" y="216">Dec</text><text x="340" y="216">Jan</text><text x="470" y="216">Feb</text>
-                </g>
-                <line x1="40" y1="56" x2="500" y2="56" stroke="#d8c7a3" stroke-width="2" stroke-dasharray="6 5"/>
-                <text x="420" y="50" font-family="Arial" font-size="10" fill="#8a7448">believed · 12</text>
-                <path d="M70 128 L210 104 L350 92 L480 80" fill="none" stroke="#176b63" stroke-width="3"/>
-                <path d="M70 128 L210 104 L350 92 L480 80 L480 56 L70 56 Z" fill="#e32323" opacity=".06"/>
-                <g fill="#176b63"><circle cx="70" cy="128" r="5"/><circle cx="210" cy="104" r="5"/><circle cx="350" cy="92" r="5"/><circle cx="480" cy="80" r="5"/></g>
-                <g font-family="Georgia" font-size="13" fill="#191919"><text x="62" y="150">6</text><text x="202" y="126">8</text><text x="342" y="114">9</text><text x="468" y="102">10</text></g>
-              </svg>
-              <div class="small muted">Deviation (gap to belief): 6 → 2 · narrowing — the Triad is holding.</div>
-            </div>
-            <div>
-              <div class="finding" style="border-left-color:var(--red)">
-                <span class="chip red">New drift · Feb re-scan</span>
-                <h3>Campaign now claims “20-minute delivery”</h3>
-                <p>New ad copy contradicts the corrected 45-minute promise. Expectation at risk.</p>
+<div class="pad">
+  @if (feb()) {
+    <div class="eyebrow">Alignment over time · Feb re-scan</div>
+    <h2 style="font-size:30px;margin:10px 0 16px">Is the gap <em>shrinking or widening?</em></h2>
+  } @else {
+    <div class="eyebrow">Monitoring · started Thu 3 Dec 2026</div>
+    <h2 style="font-size:30px;margin:10px 0 16px">We are watching <em>your promises</em> now.</h2>
+  }
+  <div class="split split-monitor">
+    <div class="card" style="padding:18px">
+      <div style="display:flex;justify-content:space-between;font-size:12.5px" class="muted"><span>Your score (what the evidence says) vs your starting line (what leaders believed)</span><span>{{ feb() ? 'monthly' : cadenceLabel() }} re-scan</span></div>
+      <svg viewBox="0 0 520 220" style="display:block;width:100%;height:auto;max-height:300px;margin-top:8px" role="img"
+           [attr.aria-label]="feb() ? 'Score rising from 6 to 10 over four months against a starting line of 12' : 'Score of 6 in November against a starting line of 12; next re-scan in January'">
+        <g font-family="Arial" font-size="10" fill="#777">
+          <line x1="40" y1="20" x2="500" y2="20" stroke="#ecebe7"/><text x="10" y="24">15</text>
+          <line x1="40" y1="80" x2="500" y2="80" stroke="#ecebe7"/><text x="10" y="84">10</text>
+          <line x1="40" y1="140" x2="500" y2="140" stroke="#ecebe7"/><text x="16" y="144">5</text>
+          <line x1="40" y1="200" x2="500" y2="200" stroke="#dddcd8"/><text x="16" y="204">0</text>
+          <text x="60" y="216">Nov</text><text x="200" y="216">Dec</text><text x="340" y="216">Jan</text><text x="470" y="216">Feb</text>
+        </g>
+        <line x1="40" y1="56" x2="500" y2="56" stroke="#d8c7a3" stroke-width="2" stroke-dasharray="6 5"/>
+        <text x="392" y="50" font-family="Arial" font-size="10" fill="#8a7448">starting line · 12</text>
+        @if (gapFill()) { <path [attr.d]="gapFill()" fill="#e32323" opacity=".06"/> }
+        @if (points().length > 1) { <path [attr.d]="path()" fill="none" stroke="#176b63" stroke-width="3"/> }
+        @else { <path [attr.d]="'M70 ' + y(6) + ' L480 ' + y(6)" fill="none" stroke="#c3dcd8" stroke-width="2" stroke-dasharray="2 6"/> }
+        @for (p of points(); track p.m) {
+          <circle [attr.cx]="p.x" [attr.cy]="y(p.v)" r="5" fill="#176b63"/>
+          <text [attr.x]="p.x - 8" [attr.y]="y(p.v) + 22" font-family="Georgia" font-size="13" fill="#191919">{{ p.v }}</text>
+        }
+      </svg>
+      @if (feb()) {
+        <div class="small muted">Gap to the starting line: 6 → 2 · narrowing. The Triad is holding.</div>
+      } @else {
+        <div class="small muted">Gap to the starting line: 6. First re-scan {{ firstRescan() }}.</div>
+      }
+      <div class="baseline-note">
+        <b>Starting line:</b> your leaders’ answers from 25 Nov 2026. It stays fixed so each re-scan measures real change. Next yearly review: Nov 2027.
+      </div>
+    </div>
+
+    <div>
+      @if (feb()) {
+        <div class="finding" style="border-left-color:var(--red)">
+          <span class="chip red">New drift · Feb re-scan</span>
+          <h3>Campaign now claims “20-minute delivery”</h3>
+          <p>New ad copy contradicts the corrected 45-minute promise. Expectation at risk.</p>
+          @switch (alert()) {
+            @case ('open') {
+              <div class="alert-calls">
+                <span class="small"><b>Is this your new promise?</b></span>
+                <button id="alert-fix-ad" class="btn ghost sm" (click)="alert.set('fixing')">No, we will fix the ad</button>
+                <button id="alert-rebaseline" class="btn sm" (click)="alert.set('confirm-rebaseline')">Yes, our promise changed</button>
               </div>
-              <div class="card" style="padding:14px 16px">
-                <b style="font-size:13.5px">What changed since January</b>
-                <div class="small" style="margin-top:8px;line-height:1.9">+46 reviews · 2 site pages changed · 6 new posts<br><span style="color:var(--teal)">Reliability 1 → 2</span> · on-time 58% → 81%<br><span style="color:var(--red)">Expectation 2 → 1 risk</span> · new campaign claim</div>
+            }
+            @case ('confirm-rebaseline') {
+              <div class="alert-box">
+                <p class="small" style="margin:0 0 8px">We will send the five questions again to {{ leaders.join(', ') }}, with the new “20-minute” claim attached. Your current starting line stays on the chart so you can compare.</p>
+                <div style="display:flex;gap:8px;flex-wrap:wrap">
+                  <button id="send-rebaseline" class="btn sm" (click)="alert.set('rebaseline-sent')">Send to {{ leaders.length }} leaders</button>
+                  <button class="btn ghost sm" (click)="alert.set('open')">Cancel</button>
+                </div>
               </div>
-              <div class="card" style="padding:14px 16px;margin-top:10px;background:#fafaf8">
-                <b style="font-size:13.5px">Next step</b>
-                <div class="small muted" style="margin-top:4px">Felix reviews the alert this week. Correction prioritised: weakest signal first.</div>
-              </div>
-            </div>
-          </div>
-          <div style="margin-top:18px;display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span class="chip teal">Genesis Triad Monitoring</span><span class="small muted">Quarterly or monthly re-scan · drift alerts · principal review each cycle</span><span style="flex:1"></span><button class="btn ghost sm hot pulse" routerLink="/">↺ Start the story again</button></div>
+            }
+            @case ('rebaseline-sent') {
+              <div class="alert-box"><span class="chip teal">Sent to {{ leaders.length }} leaders</span> <span class="small muted">A new starting line begins when they answer. Felix reviews it with you.</span></div>
+            }
+            @case ('fixing') {
+              <div class="alert-box"><span class="chip teal">Marked: fixing the ad</span> <span class="small muted">Your promise and starting line stay as they are. The next re-scan checks the ad is gone.</span></div>
+            }
+          }
         </div>
+        <div class="card" style="padding:14px 16px">
+          <b style="font-size:13.5px">What changed since January</b>
+          <div class="small" style="margin-top:8px;line-height:1.9">+46 reviews · 2 site pages changed · 6 new posts<br><span style="color:var(--teal)">Reliability 1 → 2</span> · on-time 58% → 81%<br><span style="color:var(--red)">Expectation at risk</span> · new campaign claim</div>
+        </div>
+        <div class="card" style="padding:14px 16px;margin-top:10px;background:#fafaf8">
+          <b style="font-size:13.5px">Quarterly check-in · Mon 1 Mar</b>
+          <div class="small muted" style="margin-top:4px">One question to each leader: <i>“Has anything you promise customers changed?”</i> A yes sends that person the five questions. Nobody gets the full questionnaire otherwise.</div>
+        </div>
+      } @else {
+        <div class="card" style="padding:16px 18px">
+          <b style="font-size:14px">First re-scan · {{ firstRescanDate() }}</b>
+          <div class="small muted" style="margin-top:4px">Same sources as your audit: your website and its history, reviews, posts, search results, the customer path, and your connected data.</div>
+        </div>
+        <div class="card" style="padding:16px 18px;margin-top:10px">
+          <b style="font-size:14px">Fixes we will watch</b>
+          <div class="sum-row"><span>1. Make the delivery promise true</span><span class="chip amber">In progress</span></div>
+          <div class="sum-row"><span>2. Choose one price position</span><span class="chip">Not started</span></div>
+          <div class="sum-row"><span>3. Close the portion-to-price gap</span><span class="chip">Not started</span></div>
+          <div class="sum-row" style="border-bottom:none"><span>4. Prove “chef-designed”</span><span class="chip">Not started</span></div>
+        </div>
+        <div class="card" style="padding:14px 16px;margin-top:10px;background:#fafaf8">
+          <b style="font-size:13.5px">Your leaders</b>
+          <div class="small muted" style="margin-top:4px">Nothing to answer each month. We only ask again if your promise changes, a new leader joins, or at the yearly review. First quarterly check-in question: Mon 1 Mar.</div>
+        </div>
+      }
+    </div>
+  </div>
+  <div style="margin-top:18px;display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span class="chip teal">Genesis Triad Monitoring · {{ feb() ? 'monthly' : cadenceLabel() }}</span><span class="small muted">Felix reviews every alert before it reaches you</span></div>
+</div>

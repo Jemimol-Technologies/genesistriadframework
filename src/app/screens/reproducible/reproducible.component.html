@@ -1,8 +1,8 @@
-<div class="appnav"><div class="wm"><img alt="" src="logo.png">GENESIS TRIAD</div><nav><span>Method</span><b>Reproducibility</b></nav></div>
+<gt-modal labelledBy="method-title" closeId="close-method" closeLabel="Close and go back to the finding" (dismissed)="back()">
 <div class="pad" style="position:relative">
   <div class="toast" [class.show]="toast()">Re-run complete · identical result</div>
   <div class="eyebrow">A measurement, not a conversation</div>
-  <h2 style="font-size:32px;margin:10px 0 6px">Same evidence. <em>Same score.</em> Every time.</h2>
+  <h2 id="method-title" style="font-size:32px;margin:10px 0 6px;padding-right:36px">Same evidence. <em>Same score.</em> Every time.</h2>
   <p class="muted" style="max-width:640px">A score that changes when nothing has changed can't tell you whether you're improving. So the evidence is frozen, every judgement is recorded, and the score is calculated by fixed rules.</p>
   <div class="runs" style="margin-top:20px">
     <div class="runbox">
@@ -32,6 +32,7 @@
     <button id="run-again" class="btn ghost sm" (click)="rerun()">↻ Run it again</button>
     <span class="small muted">When the score moves next month, you'll see exactly which evidence moved it.</span>
     <span style="flex:1"></span>
-    <button class="btn red hot pulse" routerLink="/upgrade">Get the full audit →</button>
+    <button id="get-full-audit" class="btn red hot pulse" (click)="upgrade()">Get the full audit →</button>
   </div>
 </div>
+</gt-modal>

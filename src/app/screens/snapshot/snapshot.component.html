@@ -20,12 +20,13 @@
           <div style="display:flex;justify-content:space-between;align-items:baseline"><h3 style="font-size:21px">{{ sc().findingsTitle }}</h3><span class="small muted">{{ sc().shown }}</span></div>
           <div style="margin-top:12px">
             @for (f of sc().findings; track f.title) {
-              <div class="finding" [class.hot]="f.opens" [class.pulse]="f.opens" [class.sq]="f.opens"
-                   [style.border-left-color]="kinds[f.kind].border" [style.cursor]="f.opens ? 'pointer' : null"
-                   (click)="f.opens && open()">
+              <div class="finding" [id]="'finding-' + f.id" role="button" tabindex="0"
+                   [class.hot]="f.featured" [class.pulse]="f.featured" [class.sq]="f.featured"
+                   [style.border-left-color]="kinds[f.kind].border" style="cursor:pointer"
+                   (click)="open(f.id)" (keydown.enter)="open(f.id)">
                 <div class="row">
                   <div><span class="chip {{ kinds[f.kind].chip }}">{{ f.kindLabel ?? kinds[f.kind].label }}</span> <span class="chip">{{ f.signals }}</span><h3>{{ f.title }}</h3></div>
-                  @if (f.opens) { <span class="small" style="color:var(--red);white-space:nowrap">View evidence →</span> }
+                  <span class="small" style="color:var(--red);white-space:nowrap">View evidence →</span>
                 </div>
                 @if (f.vs) {
                   <div class="vs"><div class="a" [innerHTML]="f.vs.promise"></div><div class="x" [style.color]="kinds[f.kind].vsColor">{{ f.vs.sym }}</div><div class="b" [innerHTML]="f.vs.proof"></div></div>
@@ -35,6 +36,7 @@
           </div>
           <div class="locked" style="margin-top:14px">
             <div class="blur"><b>Prioritised corrections</b><br><span [innerHTML]="sc().lockedTeaser"></span><br>Full five-signal Alignment Score · Leadership intent · Assumption baseline</div>
-            <div class="over"><b style="font-family:var(--serif);font-size:19px;font-weight:400;max-width:520px">{{ sc().lockedPitch }}</b><button class="btn red" routerLink="/upgrade">{{ sc().cta }}</button></div>
+            <div class="over"><b style="font-family:var(--serif);font-size:19px;font-weight:400;max-width:520px">{{ sc().lockedPitch }}</b><button id="unlock-audit" class="btn red" [routerLink]="['/r/SNP-2611-0417', 'upgrade']" queryParamsHandling="preserve">{{ sc().cta }}</button></div>
           </div>
         </div>
+<router-outlet />

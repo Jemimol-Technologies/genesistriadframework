@@ -41,7 +41,7 @@
         </div>
         <div>
           <div class="meter"><i [style.width.%]="r.confidence * 100" [style.background]="r.confidence < threshold ? 'var(--amber)' : 'var(--teal)'"></i></div>
-          <span class="small muted">{{ r.confidence.toFixed(2) }}@if (r.confidence < threshold) { · below {{ threshold.toFixed(2) }}}</span>
+          <span class="small muted">{{ pct(r.confidence) }}@if (r.confidence < threshold) { · below {{ pct(threshold) }}}</span>
         </div>
       </div>
     }

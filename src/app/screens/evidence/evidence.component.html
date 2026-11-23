@@ -1,31 +1,24 @@
-<div class="drawerwrap" style="min-height:620px">
-          <div class="pad" style="opacity:.35;filter:grayscale(1);pointer-events:none">
-            <div class="eyebrow">Free Triad Snapshot · outside-in</div>
-            <h2 style="font-size:28px;margin:8px 0 14px">Your promise and experience are pulling apart.</h2>
-            <div class="score"><b>6</b><span>/ 12 observable</span></div>
-            <div class="finding" style="margin-top:20px;max-width:440px"><h3>“Delivered in 30 minutes” — customers report about 70</h3></div>
-          </div>
-          <aside class="drawer">
-            <div style="display:flex;justify-content:space-between;align-items:center"><span class="chip red">Promise drift</span><button class="btn ghost sm" routerLink="/r/SNP-2611-0417">Close</button></div>
-            <h3 style="font-size:22px;margin:12px 0 4px">The 30-minute promise</h3>
-            <p class="small muted" style="margin:0 0 14px">Every finding carries its receipts. No source, no finding.</p>
+@if (f(); as f) {
+<div class="drawer-backdrop" [class.leaving]="leaving()" (click)="close()"></div>
+<aside class="drawer" [class.leaving]="leaving()" role="dialog" aria-modal="true" [attr.aria-label]="'Finding: ' + f.receipts.name">
+  <div style="display:flex;justify-content:space-between;align-items:center"><span class="chip {{ kinds[f.kind].chip }}">{{ f.kindLabel ?? kinds[f.kind].label }}</span><button id="close-finding" class="btn ghost sm" (click)="close()">Close</button></div>
+  <h3 style="font-size:22px;margin:12px 0 4px">{{ f.receipts.name }}</h3>
+  <p class="small muted" style="margin:0 0 14px">Every finding carries its receipts. No source, no finding.</p>
 
-            <div class="eyebrow" style="color:var(--ink);margin-bottom:6px">The promise</div>
-            <div class="ev"><div class="src"><span>Website · homepage hero</span><span>captured 21 Nov 2026</span></div><q>Premium, chef-designed meals. Delivered fresh in 30 minutes.</q></div>
-            <div class="ev"><div class="src"><span>Website history</span><span>first seen Mar 2024</span></div>Claim introduced when the service covered one neighbourhood. Unchanged after city-wide expansion (Jan 2025).</div>
+  @for (s of f.receipts.sections; track s.heading; let first = $first) {
+    <div class="eyebrow" style="color:var(--ink);margin-bottom:6px" [style.margin-top.px]="first ? 0 : 14">{{ s.heading }}</div>
+    @for (e of s.items; track e.source + e.when) {
+      <div class="ev"><div class="src"><span>{{ e.source }}</span><span>{{ e.when }}</span></div>@if (e.quote) {<q>{{ e.text }}</q>} @else {{{ e.text }}}</div>
+    }
+    @if (s.more) { <div class="small muted" style="margin:-2px 0 12px">{{ s.more }}</div> }
+  }
 
-            <div class="eyebrow" style="color:var(--ink);margin:14px 0 6px">The proof</div>
-            <div class="ev"><div class="src"><span>Customer path · checkout page</span><span>walked 21 Nov 2026</span></div><q>Estimated delivery: 45–90 minutes.</q></div>
-            <div class="ev"><div class="src"><span>Review · ★★☆☆☆ · Reviewer A</span><span>Oct 2026</span></div><q>Ordered at 7:10, arrived 8:20. Great food, but 30 minutes? Never.</q></div>
-            <div class="ev"><div class="src"><span>Review · ★★★☆☆ · Reviewer B</span><span>Sep 2026</span></div><q>Tasty and fresh, just plan for an hour.</q></div>
-            <div class="small muted" style="margin:-2px 0 12px">+ 36 more reviews on delivery time</div>
-
-            <div class="card" style="padding:14px 16px;background:#fafaf8">
-              <div style="display:flex;justify-content:space-between;font-size:13px"><b>Verdict: contradicts</b><span>confidence 0.94</span></div>
-              <div class="meter" style="margin:8px 0 10px"><i style="width:94%"></i></div>
-              <div class="small muted">Pattern rule met: 38 of 41 delivery-time reviews contradict the promise (a repeated pattern, not a single incident). Feeds <b>Reliability</b> and <b>Expectation</b>.</div>
-            </div>
-            <div class="small muted" style="margin-top:10px">🗄 Raw review and page text kept until 21 Dec 2026 · the finding, counts, links and fingerprints kept permanently.</div>
-            <button class="btn hot pulse" style="margin-top:16px" routerLink="/method">How sure can I be of this score? →</button>
-          </aside>
-        </div>
+  <div class="card" style="padding:14px 16px;background:#fafaf8">
+    <div style="display:flex;justify-content:space-between;font-size:13px"><b>Verdict: {{ kinds[f.kind].verdict }}</b><span>confidence {{ pct(f.receipts.confidence) }}</span></div>
+    <div class="meter" style="margin:8px 0 10px"><i [style.width.%]="f.receipts.confidence * 100" [style.background]="kinds[f.kind].meter"></i></div>
+    <div class="small muted">{{ f.receipts.pattern }} Feeds @for (s of f.receipts.feeds; track s; let last = $last; let i = $index) {@if (i > 0) {{{ last ? ' and ' : ', ' }}}<b>{{ s }}</b>}.</div>
+  </div>
+  <div class="small muted" style="margin-top:10px">🗄 Raw review and page text kept until 21 Dec 2026 · the finding, counts, links and fingerprints kept permanently.</div>
+  <button id="how-sure" class="btn hot pulse" style="margin-top:16px" (click)="howSure()">How sure can I be of this score? →</button>
+</aside>
+}

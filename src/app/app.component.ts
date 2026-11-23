@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, inject } from '@angular/core';
+import { NavigationEnd, Route, Router, RouterOutlet } from '@angular/router';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,16 @@ import { RouterOutlet } from '@angular/router';
   imports: [RouterOutlet],
   template: '<main class="screen"><router-outlet /></main>',
 })
-export class AppComponent {}
+export class AppComponent {
+  private screen?: Route | null;
+
+  constructor() {
+    const router = inject(Router);
+    // A new screen starts at the top; opening or closing a panel over the same screen keeps the scroll.
+    router.events.pipe(filter(e => e instanceof NavigationEnd)).subscribe(() => {
+      const screen = router.routerState.snapshot.root.firstChild?.routeConfig;
+      if (screen !== this.screen) window.scrollTo(0, 0);
+      this.screen = screen;
+    });
+  }
+}

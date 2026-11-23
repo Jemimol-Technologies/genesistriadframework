@@ -178,7 +178,7 @@
       "title": "Same evidence, <em>same score</em>",
       "actor": "brand",
       "capture": {
-        "path": "/method",
+        "path": "/r/SNP-2611-0417/f1/method",
         "actions": []
       },
       "what": "The same audit run five times gives the same score — because evidence is frozen, judgements are recorded and scoring follows fixed rules.",
@@ -188,14 +188,14 @@
         "source": "The Genesis Triad, p. 260"
       },
       "hood": "Each decision is stored against its exact input and model version. A re-run reads the stored decision.",
-      "hint": "Try Run it again, then Get the full audit"
+      "hint": "Try Run it again, then Get the full audit (closing this returns to the finding)"
     },
     {
       "id": "upgrade",
       "title": "From snapshot to <em>diagnosis</em>",
       "actor": "brand",
       "capture": {
-        "path": "/upgrade",
+        "path": "/r/SNP-2611-0417/upgrade",
         "actions": []
       },
       "what": "The hidden account reveals itself with the requester's snapshot history, and the brand upgrades to the Alignment Diagnostic at Felix's published fee.",
@@ -222,7 +222,28 @@
         "source": "The Genesis Triad, p. 242"
       },
       "hood": "Confidential inputs stay in the brand's private workspace and are never used for another client.",
-      "hint": "Click Submit for analysis"
+      "hint": "Connect a source and add a leader, then try Ready to submit and click Submit for analysis",
+      "baseLabel": "Just paid",
+      "states": [
+        {
+          "id": "ready",
+          "label": "Ready to submit",
+          "note": "Data connected, the founder has answered and the sales lead too; operations is still invited. Submit is now open.",
+          "capture": {
+            "path": "/diagnostic/evidence?state=ready",
+            "actions": []
+          }
+        },
+        {
+          "id": "submitted",
+          "label": "Submitted",
+          "note": "What the brand sees after submitting: the diagnostic is with Felix, the session is booked, and the signed report comes by email. Felix’s console is never shown to the brand.",
+          "capture": {
+            "path": "/diagnostic/submitted",
+            "actions": []
+          }
+        }
+      ]
     },
     {
       "id": "queue",
@@ -273,14 +294,26 @@
         "source": "The Genesis Triad, p. 35"
       },
       "hood": "The report names its snapshot and is re-runnable to the same result.",
-      "hint": "Click Keep it aligned"
+      "hint": "Click Keep it aligned",
+      "baseLabel": "The report",
+      "states": [
+        {
+          "id": "ready",
+          "label": "Report ready",
+          "note": "What the brand sees when Felix signs: every step done, the score and the first fix at a glance, and one button into the signed report.",
+          "capture": {
+            "path": "/diagnostic/submitted?state=ready",
+            "actions": []
+          }
+        }
+      ]
     },
     {
       "id": "monitor",
       "title": "Keep it <em>aligned</em>",
       "actor": "brand",
       "capture": {
-        "path": "/monitor/freshbox",
+        "path": "/diagnostic/freshbox/monitoring",
         "actions": []
       },
       "what": "Regular re-scans track the score against the belief baseline and flag new drift — like a campaign that breaks the corrected promise.",
@@ -289,8 +322,29 @@
         "text": "Alignment, when treated as a discipline rather than a one-time audit, becomes one of the most powerful safeguards.",
         "source": "The Genesis Triad, p. 256"
       },
-      "hood": "Each re-scan is a new frozen snapshot; changes come with an evidence diff.",
-      "hint": "End of story · Start again anytime"
+      "hood": "Each re-scan is a new frozen snapshot; changes come with an evidence diff. Leaders are not re-asked each cycle: their first answers stay the starting line unless the promise changes, a new leader joins, or at the yearly review. A one-question check-in each quarter catches changes.",
+      "hint": "Pick a cadence and click Start monitoring, then try Three months on",
+      "baseLabel": "The offer",
+      "states": [
+        {
+          "id": "start",
+          "label": "Just started",
+          "note": "Monitoring is on: the audit score is the first point, the first re-scan is booked, and the four fixes are being watched.",
+          "capture": {
+            "path": "/monitor/freshbox",
+            "actions": []
+          }
+        },
+        {
+          "id": "feb",
+          "label": "Three months on",
+          "note": "The gap has narrowed from 6 to 2, and a new campaign claim triggers a drift alert. The brand decides: fix the ad, or re-baseline because the promise really changed.",
+          "capture": {
+            "path": "/monitor/freshbox?state=feb",
+            "actions": []
+          }
+        }
+      ]
     }
   ]
 }
