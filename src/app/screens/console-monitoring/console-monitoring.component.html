@@ -1,0 +1,47 @@
+<div class="console">
+  <gt-console-nav active="monitoring" [today]="feb() ? 'Mon 1 Feb 2027' : 'Thu 3 Dec 2026'" />
+  <div class="main">
+    <div class="eyebrow">Principal console · {{ feb() ? 'Mon 1 Feb 2027' : 'Thu 3 Dec 2026' }}</div>
+    <h2 style="font-size:28px;margin:8px 0 4px">Monitoring</h2>
+    <p class="small muted" style="margin:0 0 16px">Re-scans run on their own. Alerts wait for you: nothing reaches a client until you approve it.</p>
+
+    <div class="alert-review">
+      <div class="alert-review-head">
+        @switch (call()) {
+          @case ('pending') {<span class="chip red">Alert to review</span>}
+          @case ('sent') {<span class="chip teal">Sent to {{ alert().client }}</span>}
+          @case ('held') {<span class="chip amber">Held</span>}
+          @case ('dismissed') {<span class="chip">Dismissed</span>}
+        }
+        <span class="small muted">{{ alert().client }} · {{ alert().seen }}</span>
+      </div>
+      <h3 style="font-size:20px;margin:8px 0 4px">{{ alert().claim }}</h3>
+      <div class="small muted">Was {{ alert().before.text }} · <span style="color:var(--red)">{{ alert().impact.check }} at risk</span> · {{ alert().items.length }} pieces of evidence</div>
+      <div style="margin-top:12px"><button [id]="'open-alert-' + alert().id" class="btn hot" [class.pulse]="call() === 'pending'" [routerLink]="['/console/monitoring/alert', alert().id]">{{ call() === 'pending' ? 'Review the alert →' : 'Open the alert →' }}</button></div>
+    </div>
+
+    <table class="q" style="margin-top:18px">
+      <thead><tr><th>Client</th><th>Re-scan</th><th>Level now</th><th>Since starting line</th><th>Alerts</th></tr></thead>
+      <tbody>
+        @if (feb()) {
+          <tr>
+            <td><b>FreshBox Kitchens</b><br><span class="small muted">since 3 Dec</span></td><td class="small">Monthly · last Mon 1 Feb</td>
+            <td><span class="bucket-chip" [style.background]="bk(10, 15).tint" [style.color]="bk(10, 15).color">{{ bk(10, 15).label }}</span> <span class="small muted">10/15</span></td>
+            <td class="small"><span style="color:var(--teal)">↗</span> 6 → 10 · gap 6 → 2</td><td>@if (call() === 'pending') {<a class="chip red" [routerLink]="['/console/monitoring/alert', alert().id]">1 to review</a>} @else {<span class="chip">None open</span>}</td>
+          </tr>
+        }
+        <tr>
+          <td><b>Lotus Spa Co.</b><br><span class="small muted">since Aug</span></td><td class="small">Monthly · last {{ feb() ? 'Mon 1 Feb' : 'Tue 1 Dec' }}</td>
+          <td><span class="bucket-chip" [style.background]="bk(12, 15).tint" [style.color]="bk(12, 15).color">{{ bk(12, 15).label }}</span> <span class="small muted">12/15</span></td>
+          <td class="small"><span style="color:var(--teal)">↗</span> 9 → 12 · gap closed</td><td><span class="chip">None open</span></td>
+        </tr>
+        <tr>
+          <td><b>Kite Bikes</b><br><span class="small muted">since Jun</span></td><td class="small">Quarterly · last Tue 1 Dec</td>
+          <td><span class="bucket-chip" [style.background]="bk(7, 15).tint" [style.color]="bk(7, 15).color">{{ bk(7, 15).label }}</span> <span class="small muted">7/15</span></td>
+          <td class="small"><span style="color:var(--red)">↘</span> 8 → 7 · gap widening</td><td>@if (!feb() && call() === 'pending') {<a class="chip red" [routerLink]="['/console/monitoring/alert', alert().id]">1 to review</a>} @else {<span class="chip">None open</span>}</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="small muted" style="margin-top:12px">Leaders are not re-asked on re-scans. A brand can tell you its promise changed from an alert; then its leaders answer again and a new starting line begins.</p>
+  </div>
+</div>

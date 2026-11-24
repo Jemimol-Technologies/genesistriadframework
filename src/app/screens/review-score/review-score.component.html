@@ -1,0 +1,92 @@
+<div class="console">
+  <gt-console-nav active="queue" />
+  @if (file(); as f) {
+  @let e = engine()!;
+  <div class="main">
+    <a class="crumb" id="back-to-evidence" [routerLink]="['/console/review/freshbox', f.key]">← {{ f.name }} evidence</a>
+    <div class="eyebrow" style="margin-top:10px">FreshBox Kitchens · {{ f.name }}</div>
+    <h2 style="font-size:26px;margin:6px 0 4px">How the evidence became <em>{{ bandLabel[s.proposed[f.key]] }} ({{ s.proposed[f.key] }})</em></h2>
+    <p class="small muted" style="margin:0 0 16px">The same five steps run for every check. Nothing here is a judgement call by the engine beyond sorting each item; the rest is arithmetic you can redo.</p>
+
+    <ol class="steps-x">
+      <li>
+        <h3>Sort every item</h3>
+        <p>Each of the {{ f.items.length }} items was read as positive, negative, or not readable either way.</p>
+        <div class="sx-sort">
+          <span [style.color]="lean.pos.color"><b>{{ e.pos }}</b> positive weight</span>
+          <span [style.color]="lean.neg.color"><b>{{ e.neg }}</b> negative weight</span>
+          <span [style.color]="lean.unsure.color"><b>{{ e.unsure }}</b> can’t conclude, <u>left out</u></span>
+        </div>
+        <a class="small" [routerLink]="['/console/review/freshbox', f.key]">See the items →</a>
+      </li>
+      <li>
+        <h3>Weigh them</h3>
+        <p>Items count {{ weight[1].label.toLowerCase() }} (1), {{ weight[2].label.toLowerCase() }} (2) or {{ weight[3].label.toLowerCase() }} (3). {{ weight[3].label }}: {{ weight[3].why.toLowerCase() }}. {{ weight[1].label }}: {{ weight[1].why.toLowerCase() }}.</p>
+        <div class="sx-bar"><i [style.flex]="e.pos" [style.background]="lean.pos.color"></i><i [style.flex]="e.neg" [style.background]="lean.neg.color"></i></div>
+        <p class="sx-sum">{{ e.pos }} ÷ ({{ e.pos }} + {{ e.neg }}) = <b>{{ pct(e.share) }}</b> of the counted evidence is positive.</p>
+      </li>
+      <li>
+        <h3>Read it against the levels</h3>
+        <p>The lines sit at {{ pct(lines[0]) }}, {{ pct(lines[1]) }} and {{ pct(lines[2]) }} for every check.</p>
+        <div class="sx-scale" [class.two]="hasCalls()">
+          @for (b of bands; track b) {
+            <div class="sx-zone" [class.on]="b === e.level"><b>{{ bandLabel[b] }} ({{ b }})</b><span>{{ f.levels[b] }}</span></div>
+          }
+          <span class="sx-mark" [style.left.%]="e.share * 100" title="Engine">▲ {{ pct(e.share) }}</span>
+          @if (hasCalls()) {<span class="sx-mark mine" [style.left.%]="mine()!.share * 100" title="With your calls">▲ {{ pct(mine()!.share) }} yours</span>}
+        </div>
+        <p class="sx-sum">{{ pct(e.share) }} falls in <b>{{ bandLabel[e.level] }} ({{ e.level }})</b>: “{{ f.levels[e.level] }}”.
+          @if (hasCalls()) {<br><span style="color:var(--deep)">With your calls on unclear items: {{ mine()!.pos }} ÷ ({{ mine()!.pos }} + {{ mine()!.neg }}) = {{ pct(mine()!.share) }}, which reads <b>{{ bandLabel[mine()!.level] }} ({{ mine()!.level }})</b>.</span>}</p>
+      </li>
+      <li>
+        <h3>Check it holds</h3>
+        <p>The engine ran the whole check five times, independently.</p>
+        <div class="sx-runs">
+          @for (r of f.runs; track $index) {<span class="chip" [class.teal]="r === s.proposed[f.key]" [class.amber]="r !== s.proposed[f.key]">Run {{ $index + 1 }}: {{ bandLabel[r] }} ({{ r }})</span>}
+        </div>
+        <p class="sx-sum">{{ agree() }} of 5 runs agree.</p>
+      </li>
+      <li>
+        <h3>How sure it is</h3>
+        <div class="sx-sure">
+          <div><b>{{ agree() }} of 5</b><span>runs agree</span></div>
+          <div><b>{{ pct(e.unsureShare) }}</b><span>of the evidence left out as unclear</span></div>
+          <div><b>{{ (e.margin * 100).toFixed(0) }} pts</b><span>from the nearest level line</span></div>
+        </div>
+        <p class="sx-sum">Together: <b [style.color]="f.confidence < 0.7 ? 'var(--amber)' : 'var(--teal)'">{{ pct(f.confidence) }} sure</b>.
+          @if (f.confidence < 0.7) { Below 70%, so it is flagged for you. } @else { Above 70%; flagged only if you want to look. }</p>
+      </li>
+    </ol>
+
+    <div class="card ruling" id="ruling">
+      <div class="eyebrow" style="color:var(--ink)">Your ruling</div>
+      <p class="small muted" style="margin:6px 0 10px">This level goes into the report, out of 3 points, and feeds {{ f.feeds }}.</p>
+      <div class="band-pick">
+        @for (b of bands; track b) {
+          <button type="button" [id]="'rule-' + f.key + '-' + b" [class.on]="pick() === b" [class.ai]="s.proposed[f.key] === b" [disabled]="locked()" (click)="pick.set(b)">
+            <b>{{ b }}</b><span>{{ bandLabel[b] }}</span>@if (s.proposed[f.key] === b) {<i>engine</i>}
+          </button>
+        }
+      </div>
+      @if (changing()) {
+        <label class="small" for="rule-reason" style="display:block;margin-top:12px"><b>Why are you changing it?</b> Priya sees this in the report.</label>
+        <textarea id="rule-reason" rows="2" [value]="reason()" (input)="reason.set($any($event.target).value)" [disabled]="locked()" placeholder="e.g. The tone shift is a pattern across three months, not noise."></textarea>
+      }
+      <div class="ruling-foot">
+        @if (s.ruled()[f.key]; as r) {
+          <span class="chip" [class.teal]="r === 'agreed'" [class.red]="r === 'changed'">✓ {{ r === 'agreed' ? 'Agreed with the engine' : 'Changed to ' + bandLabel[s.bands()[f.key]] + ' (' + s.bands()[f.key] + ')' }}</span>
+        }
+        <span style="flex:1"></span>
+        @if (!locked()) {
+          <button id="rule-save" class="btn teal" [disabled]="!canRule()" (click)="rule()">{{ changing() ? 'Use ' + bandLabel[pick()] + ' (' + pick() + ')' : 'Agree with the engine' }}</button>
+        }
+        @if (next(); as n) {
+          <button class="btn ghost" id="next-check" [routerLink]="['/console/review/freshbox', n.key]">Next: {{ n.name }} →</button>
+        } @else {
+          <button class="btn ghost" id="to-review" routerLink="/console/review/freshbox">Back to the review →</button>
+        }
+      </div>
+    </div>
+  </div>
+  }
+</div>

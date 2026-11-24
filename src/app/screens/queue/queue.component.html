@@ -1,22 +1,29 @@
 <div class="console">
-          <div class="side">
-            <div class="wm"><img alt="" src="logo.png">GENESIS TRIAD</div>
-            <a class="on">Review queue <b>2</b></a><a>Snapshots</a><a>Clients</a><a>Monitoring</a><a>Pattern library</a><a>Settings</a>
-            <div class="me"><b>Felix Chandran G</b>Principal</div>
-          </div>
+          <gt-console-nav active="queue" />
           <div class="main">
             <div class="eyebrow">Principal console</div>
             <h2 style="font-size:28px;margin:8px 0 4px">Review queue</h2>
             <p class="small muted" style="margin:0 0 16px">AI proposes. You decide. Nothing reaches a client without your sign-off.</p>
             <table class="q">
-              <thead><tr><th>Client</th><th>Audit</th><th>Proposed score</th><th>Needs you</th><th>Status</th></tr></thead>
+              <thead><tr><th>Client</th><th>Audit</th><th>Proposed score</th><th>Needs you</th><th>Delivery due in</th><th>Status</th></tr></thead>
               <tbody>
-                <tr class="click hot" routerLink="/console/review/freshbox"><td><b>FreshBox Kitchens</b><br><span class="small muted">Improve · Food delivery</span></td><td>Alignment Diagnostic</td><td><span style="font-family:var(--serif);font-size:18px">7</span> / 15 <span class="bucket-chip" style="background:#fbe7e7;color:#e32323">Pulling apart</span></td><td><span class="chip amber">2 low-confidence calls</span></td><td><span class="chip red">Ready for review</span></td></tr>
-                <tr><td><b>Nimbus Learning</b><br><span class="small muted">Expand · Edtech</span></td><td>Alignment Diagnostic</td><td><span style="font-family:var(--serif);font-size:18px">10</span> / 15 <span class="bucket-chip" style="background:#f8efdb;color:#b7791f">Almost there</span></td><td><span class="chip">—</span></td><td><span class="chip red">Ready for review</span></td></tr>
-                <tr><td><b>Orbit Clinics</b><br><span class="small muted">Improve · Healthcare</span></td><td>Alignment Diagnostic</td><td class="muted">—</td><td class="muted">—</td><td><span class="chip">Awaiting client data</span></td></tr>
-                <tr><td><b>Kiln &amp; Co.</b><br><span class="small muted">New · D2C homeware</span></td><td>Free snapshot</td><td><span style="font-family:var(--serif);font-size:18px">8</span> / 12</td><td class="muted">—</td><td><span class="chip teal">Sent automatically</span></td></tr>
+                @if (s.signed()) {
+                <tr class="click" routerLink="/console/review/freshbox" [queryParams]="{ state: 'signed' }"><td><b>FreshBox Kitchens</b><br><span class="small muted">Improve · Food delivery</span></td><td>Alignment Diagnostic</td><td><span style="font-family:var(--serif);font-size:18px">{{ s.signedTotal() }}</span> / 15 <span class="bucket-chip" [style.background]="bk(s.signedTotal(), 15).tint" [style.color]="bk(s.signedTotal(), 15).color">{{ bk(s.signedTotal(), 15).label }}</span></td><td class="muted">—</td><td class="muted">Delivered</td><td><span class="chip teal">Signed · sent today</span></td></tr>
+                } @else {
+                <tr id="queue-freshbox" class="click hot" routerLink="/console/review/freshbox"><td><b>FreshBox Kitchens</b><br><span class="small muted">Improve · Food delivery</span></td><td>Alignment Diagnostic</td><td><span style="font-family:var(--serif);font-size:18px">7</span> / 15 <span class="bucket-chip" style="background:#fbe7e7;color:#e32323">Pulling apart</span></td><td><span class="chip amber">2 low-confidence calls</span></td><td><span class="due due-soon">2 days</span><br><span class="small muted">Promised Sat 5 Dec</span></td><td><span class="chip red">Ready for review</span></td></tr>
+                }
+                <tr><td><b>Nimbus Learning</b><br><span class="small muted">Expand · Edtech</span></td><td>Alignment Diagnostic</td><td><span style="font-family:var(--serif);font-size:18px">10</span> / 15 <span class="bucket-chip" style="background:#f8efdb;color:#b7791f">Almost there</span></td><td><span class="chip">—</span></td><td><span class="due">5 days</span><br><span class="small muted">Promised Tue 8 Dec</span></td><td><span class="chip red">Ready for review</span></td></tr>
+                <tr><td><b>Orbit Clinics</b><br><span class="small muted">Improve · Healthcare</span></td><td>Alignment Diagnostic</td><td class="muted">—</td><td class="muted">—</td><td><span class="due">10 days</span><br><span class="small muted">Clock starts when their data arrives</span></td><td><span class="chip">Awaiting client data</span></td></tr>
+                <tr><td><b>Kiln &amp; Co.</b><br><span class="small muted">New · D2C homeware</span></td><td>Free snapshot</td><td><span style="font-family:var(--serif);font-size:18px">8</span> / 12 <span class="bucket-chip" style="background:#f8efdb;color:#b7791f">Almost there</span></td><td class="muted">—</td><td class="muted">Delivered</td><td><span class="chip teal">Sent automatically</span></td></tr>
               </tbody>
             </table>
-            <div style="margin-top:18px"><button class="btn hot pulse" routerLink="/console/review/freshbox">Open FreshBox Kitchens →</button></div>
+            <div class="q-legend" id="queue-legend">
+              <span class="q-legend-title">Score levels</span>
+              @for (b of buckets; track b.id) {
+              <span class="q-legend-item"><span class="bucket-chip" [style.background]="b.tint" [style.color]="b.color">{{ b.label }}</span><span class="small muted">{{ b.of15 }} of 15 · {{ b.of12 }} of 12</span></span>
+              }
+              <button type="button" class="sm-help" id="score-help-queue" (click)="guide.open.set(true)">ⓘ What these mean</button>
+            </div>
+            @if (!s.signed()) {<div style="margin-top:18px"><button id="open-freshbox" class="btn hot pulse" routerLink="/console/review/freshbox">Open FreshBox Kitchens →</button></div>}
           </div>
         </div>

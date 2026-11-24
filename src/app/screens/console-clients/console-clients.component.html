@@ -1,0 +1,54 @@
+<div class="console">
+  <gt-console-nav active="clients" />
+  <div class="main">
+    <div class="eyebrow">Principal console</div>
+    <h2 style="font-size:28px;margin:8px 0 4px">Clients</h2>
+    <p class="small muted" style="margin:0 0 16px">Brands that bought an Alignment Diagnostic or monitoring. Levels are out of 15 and include each brand’s own data.</p>
+
+    <table class="q">
+      <thead><tr><th>Client</th><th>Stage</th><th>Level</th><th>Leaders</th><th>Next step</th></tr></thead>
+      <tbody>
+        <tr class="click" routerLink="/console/review/freshbox" [queryParams]="s.signed() ? { state: 'signed' } : {}">
+          <td><b>FreshBox Kitchens</b><br><span class="small muted">Priya R. · founder · since 21 Nov</span></td>
+          <td><span class="chip" [class.teal]="s.signed()" [class.red]="!s.signed()">{{ freshbox().stage }}</span></td>
+          <td><span class="bucket-chip" [style.background]="bk(freshbox().score, 15).tint" [style.color]="bk(freshbox().score, 15).color">{{ bk(freshbox().score, 15).label }}</span> <span class="small muted">{{ freshbox().score }}/15</span></td>
+          <td class="small">3 of 3 answered</td>
+          <td class="small">{{ freshbox().next }}</td>
+        </tr>
+        <tr>
+          <td><b>Nimbus Learning</b><br><span class="small muted">Tom H. · CMO · since 18 Nov</span></td>
+          <td><span class="chip red">Waiting for your review</span></td>
+          <td><span class="bucket-chip" [style.background]="bk(10, 15).tint" [style.color]="bk(10, 15).color">{{ bk(10, 15).label }}</span> <span class="small muted">10/15</span></td>
+          <td class="small">4 of 4 answered</td>
+          <td class="small">Review and sign · intent session Mon 7 Dec, 11:00</td>
+        </tr>
+        <tr>
+          <td><b>Orbit Clinics</b><br><span class="small muted">Dr R. Menon · director · since 26 Nov</span></td>
+          <td><span class="chip">Adding their data</span></td>
+          <td class="muted small">Not scored yet</td>
+          <td class="small">1 of 3 answered</td>
+          <td class="small">Waiting on analytics access · reminder sent Tue</td>
+        </tr>
+        <tr>
+          <td><b>Lotus Spa Co.</b><br><span class="small muted">Ana F. · owner · since Aug</span></td>
+          <td><span class="chip teal">Monitoring · monthly</span></td>
+          <td><span class="bucket-chip" [style.background]="bk(12, 15).tint" [style.color]="bk(12, 15).color">{{ bk(12, 15).label }}</span> <span class="small muted">12/15</span></td>
+          <td class="small">Starting line Aug 2026</td>
+          <td class="small">Next re-scan Mon 4 Jan · no alerts</td>
+        </tr>
+        <tr class="click" routerLink="/console/monitoring">
+          <td><b>Kite Bikes</b><br><span class="small muted">Rohan S. · founder · since Jun</span></td>
+          <td><span class="chip teal">Monitoring · quarterly</span></td>
+          <td><span class="bucket-chip" [style.background]="bk(7, 15).tint" [style.color]="bk(7, 15).color">{{ bk(7, 15).label }}</span> <span class="small muted">7/15</span></td>
+          <td class="small">Starting line Jun 2026</td>
+          <td class="small"><b style="color:var(--red)">Alert to review</b> · pricing page claim</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="card" style="padding:14px 16px;margin-top:16px;background:#fafaf8">
+      <b style="font-size:13.5px">This week</b>
+      <div class="small muted" style="margin-top:4px">Thu 3 Dec · sign FreshBox · Mon 7 Dec 11:00 · Nimbus intent session · Tue 8 Dec · Orbit Clinics check-in call</div>
+    </div>
+  </div>
+</div>

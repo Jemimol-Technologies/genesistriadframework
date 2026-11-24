@@ -1,0 +1,142 @@
+<div class="console">
+  <gt-console-nav active="monitoring" [today]="a()?.today ?? 'Thu 3 Dec 2026'" />
+  @if (a(); as a) {
+  <div class="main">
+    <a class="crumb" id="back-to-monitoring" routerLink="/console/monitoring" [queryParams]="backQuery()">← Monitoring · {{ a.today }}</a>
+
+    <div class="cf-head" style="margin-top:12px">
+      <div>
+        <div class="eyebrow">{{ a.client }} · {{ a.seen }}</div>
+        <h2>{{ a.claim }}</h2>
+      </div>
+      <div class="cf-verdict">
+        @switch (call()) {
+          @case ('pending') {<span class="chip red">Waiting for you</span>}
+          @case ('sent') {<span class="chip teal">Sent to {{ a.client }}</span>}
+          @case ('held') {<span class="chip amber">Held</span>}
+          @case ('dismissed') {<span class="chip">Dismissed</span>}
+        }
+        <div class="small" style="margin-top:6px" [style.color]="a.confidence < 0.7 ? 'var(--amber)' : 'var(--teal)'">{{ pct(a.confidence) }} sure it is real drift</div>
+      </div>
+    </div>
+
+    <div class="al-change">
+      <div class="card al-was">
+        <div class="eyebrow" style="color:var(--teal)">The signed promise</div>
+        <p>{{ a.before.text }}</p>
+        <div class="small muted">{{ a.before.source }}</div>
+      </div>
+      <div class="al-arrow" aria-hidden="true">→</div>
+      <div class="card al-now">
+        <div class="eyebrow">What the re-scan found</div>
+        <p>{{ a.after.text }}</p>
+        <div class="small muted">{{ a.after.source }}</div>
+      </div>
+    </div>
+
+    <div class="card cf-reading">
+      <b>The engine’s reading</b>
+      <p>{{ a.reading }}</p>
+    </div>
+
+    <div class="cf-balance" aria-label="Evidence by weight">
+      @for (l of leans; track l) {<i [style.flex]="weightOf(l)" [style.background]="lean[l].color"></i>}
+    </div>
+    <div class="cf-legend small muted">
+      @for (l of leans; track l) {<span><i [style.background]="lean[l].color"></i>{{ lean[l].short }} · {{ itemsOf(l).length }} {{ itemsOf(l).length === 1 ? 'item' : 'items' }}, weight {{ weightOf(l) }}</span>}
+    </div>
+
+    <div class="cf-cols">
+      @for (l of leans; track l) {
+        <section class="cf-col" [id]="'col-' + l">
+          <h3 [style.color]="lean[l].color">{{ lean[l].label }} <span class="muted">({{ itemsOf(l).length }})</span></h3>
+          @for (i of itemsOf(l); track i.id) {
+            <article class="ev" [id]="'ev-' + i.id" [style.border-left-color]="lean[l].color">
+              <div class="ev-text">{{ i.text }}</div>
+              <div class="ev-meta">
+                <span>{{ i.source }}</span>
+                <span class="ev-from" [class.yours]="i.from === 'yours'" [class.leaders]="i.from === 'leaders'">{{ from[i.from] }}</span>
+                <span class="ev-weight" [attr.title]="weight[i.weight].why">@for (d of dots(i.weight); track $index) {<i [class.on]="d"></i>} {{ weight[i.weight].label }}</span>
+              </div>
+              @if (i.why) {<div class="ev-why"><b>Why it can’t tell:</b> {{ i.why }}</div>}
+            </article>
+          } @empty {<p class="small muted">None.</p>}
+        </section>
+      }
+    </div>
+
+    <h3 style="font-size:20px;margin:26px 0 12px">How this became an alert</h3>
+    <ol class="steps-x">
+      <li>
+        <h3>A claim changed</h3>
+        <p>The re-scan compares every channel {{ a.client }} controls with the last scan. This line is new ({{ a.after.source }}).</p>
+      </li>
+      <li>
+        <h3>It contradicts the starting line</h3>
+        <p>{{ a.baseline }} The new line is read against {{ a.check }}: is the promise clear, and is it true?</p>
+      </li>
+      <li>
+        <h3>The evidence was weighed</h3>
+        <div class="sx-bar"><i [style.flex]="weightOf('drift')" [style.background]="lean.drift.color"></i><i [style.flex]="weightOf('fine')" [style.background]="lean.fine.color"></i></div>
+        <p class="sx-sum">{{ weightOf('drift') }} ÷ ({{ weightOf('drift') }} + {{ weightOf('fine') }}) = <b>{{ pct(driftShare()) }}</b> of the counted evidence says the new claim is not true. {{ weightOf('unsure') }} left out as unclear.</p>
+      </li>
+      <li>
+        <h3>What it does to the score</h3>
+        <div class="al-impact">
+          <div><span class="small muted">{{ a.impact.check }}</span><b>{{ bandLabel[a.impact.from] }} ({{ a.impact.from }}) → {{ bandLabel[a.impact.to] }} ({{ a.impact.to }})</b></div>
+          <div><span class="small muted">Overall, if nothing changes</span><b>{{ a.impact.totalFrom }} → {{ a.impact.totalTo }} of 15</b>
+            <span class="bucket-chip" [style.background]="bk(a.impact.totalTo, 15).tint" [style.color]="bk(a.impact.totalTo, 15).color">{{ bk(a.impact.totalTo, 15).label }}</span></div>
+        </div>
+        <p class="sx-sum">{{ a.impact.note }} An alert fires when a check would drop a full level. Smaller moves are logged without an alert.</p>
+      </li>
+      <li>
+        <h3>How sure</h3>
+        <p class="sx-sum">{{ a.runs }} of 5 independent runs flagged it. Together with the unclear evidence: <b [style.color]="a.confidence < 0.7 ? 'var(--amber)' : 'var(--teal)'">{{ pct(a.confidence) }} sure</b>.</p>
+      </li>
+    </ol>
+
+    <div class="card al-next">
+      <b>What {{ a.client }} can do once you send it</b>
+      <div class="al-next-grid">
+        <div><b>Fix it</b><span class="small muted">Change the line back. The next re-scan confirms it and the alert closes.</span></div>
+        <div><b>Our promise changed</b><span class="small muted">Their leaders answer the intent questions again, and you sign a new starting line.</span></div>
+      </div>
+    </div>
+
+    <div class="card ruling" id="alert-decision">
+      <div class="eyebrow" style="color:var(--ink)">Your decision</div>
+      @switch (call()) {
+        @case ('pending') {
+          <label class="small" for="alert-note" style="display:block;font-weight:700;margin:10px 0 6px">Note to {{ a.client }} (drafted by the engine, edit freely)</label>
+          <textarea id="alert-note" rows="4" [value]="m.notes()[a.id]" (input)="m.setNote(a.id, $any($event.target).value)"></textarea>
+          @if (dismissing()) {
+            <label class="small" for="dismiss-reason" style="display:block;font-weight:700;margin:12px 0 6px">Why is this a false alarm? Logged, and used to tune the engine.</label>
+            <textarea id="dismiss-reason" rows="2" [value]="reason()" (input)="reason.set($any($event.target).value)" placeholder="e.g. The ads only run within 3 km of the express kitchen."></textarea>
+            <div class="ruling-foot">
+              <button id="confirm-dismiss" class="btn" [disabled]="reason().trim().length < 4" (click)="confirmDismiss()">Dismiss the alert</button>
+              <button class="btn ghost" (click)="dismissing.set(false)">Cancel</button>
+            </div>
+          } @else {
+            <div class="ruling-foot">
+              <button id="approve-alert" class="btn teal hot pulse" (click)="m.setCall(a.id, 'sent')">Approve and send</button>
+              <button id="hold-alert" class="btn ghost" (click)="m.setCall(a.id, 'held')">Hold: I will call them</button>
+              <button id="dismiss-alert" class="btn ghost" (click)="dismissing.set(true)">False alarm…</button>
+            </div>
+          }
+        }
+        @case ('sent') {
+          <p class="small" style="margin:10px 0 0">Sent. {{ a.client }} sees it on their monitoring page with your note and the two choices above.</p>
+          <blockquote class="al-quote">{{ m.notes()[a.id] }}</blockquote>
+        }
+        @case ('held') {
+          <p class="small" style="margin:10px 0 0">Held. Not shown to {{ a.client }}; it stays in your monitoring list until you send or dismiss it.</p>
+          <div class="ruling-foot"><button class="btn ghost" id="reopen-alert" (click)="m.setCall(a.id, 'pending')">Reopen</button></div>
+        }
+        @case ('dismissed') {
+          <p class="small" style="margin:10px 0 0">Dismissed as a false alarm. {{ a.client }} never sees it.<br><span class="muted">Your reason: “{{ m.dismissReasons()[a.id] }}”</span></p>
+        }
+      }
+    </div>
+  </div>
+  }
+</div>

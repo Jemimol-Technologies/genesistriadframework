@@ -1,0 +1,24 @@
+<div class="appnav"><a class="wm" routerLink="/" style="text-decoration:none"><img alt="" src="logo.png">GENESIS TRIAD</a><nav><span>Principal console</span></nav></div>
+<div class="pad signin-wrap">
+  <div class="card signin">
+    <div class="eyebrow">Principal console</div>
+    <h2 style="font-size:30px;margin:10px 0 6px">Sign in</h2>
+    @if (step() === 'email') {
+      <p class="small muted" style="margin:0 0 18px">We email you a one-time code. No password to remember.</p>
+      <div class="field"><label for="signin-email">Work email</label>
+        <input id="signin-email" class="input" type="email" [value]="email()" (input)="email.set($any($event.target).value)" (keydown.enter)="sendCode()"></div>
+      <button id="send-code" class="btn red hot" [class.pulse]="emailOk()" style="width:100%" [disabled]="!emailOk()" [style.opacity]="emailOk() ? 1 : .4" (click)="sendCode()">Email me a code →</button>
+    } @else {
+      <p class="small muted" style="margin:0 0 18px">We sent a 6-digit code to <b style="color:var(--ink)">{{ email() }}</b>. It works for 10 minutes.</p>
+      <div class="field"><label for="signin-code">Code</label>
+        <input id="signin-code" class="input code-input" inputmode="numeric" autocomplete="one-time-code" [value]="code()" (input)="code.set($any($event.target).value)" (keydown.enter)="signIn()"></div>
+      <button id="sign-in" class="btn red hot" [class.pulse]="codeOk()" style="width:100%" [disabled]="!codeOk()" [style.opacity]="codeOk() ? 1 : .4" (click)="signIn()">Sign in →</button>
+      <div style="display:flex;justify-content:space-between;margin-top:12px" class="small">
+        <button class="linkish" (click)="step.set('email')">Use a different email</button>
+        <button class="linkish">Send a new code</button>
+      </div>
+    }
+    <hr class="soft">
+    <p class="small muted" style="margin:0">Looking for your brand’s snapshot? You do not need an account. <a routerLink="/" class="linkish">Run a free snapshot</a>.</p>
+  </div>
+</div>

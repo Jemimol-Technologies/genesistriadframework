@@ -1,0 +1,47 @@
+<div class="console">
+  <gt-console-nav active="snapshots" />
+  <div class="main">
+    <div class="eyebrow">Principal console</div>
+    <h2 style="font-size:28px;margin:8px 0 4px">Free snapshots</h2>
+    <p class="small muted" style="margin:0 0 16px">Every free snapshot anyone has run. Each one is kept, with the requester’s consent, as research data and as a lead.</p>
+
+    <div class="stat-strip">
+      <div><b>64</b><span>snapshots in Nov</span></div>
+      <div><b>41</b><span>own brands</span></div>
+      <div><b>17</b><span>competitors</span></div>
+      <div><b>6</b><span>agencies</span></div>
+      <div><b>3</b><span>became clients</span></div>
+    </div>
+
+    <div class="seg" style="margin:16px 0 12px">
+      <span id="filter-all" role="button" style="cursor:pointer" [class.on]="filter() === 'all'" (click)="filter.set('all')">All</span>
+      <span id="filter-own" role="button" style="cursor:pointer" [class.on]="filter() === 'own'" (click)="filter.set('own')">Own brands · {{ count('own') }}</span>
+      <span id="filter-competitor" role="button" style="cursor:pointer" [class.on]="filter() === 'competitor'" (click)="filter.set('competitor')">Competitors · {{ count('competitor') }}</span>
+      <span id="filter-agency" role="button" style="cursor:pointer" [class.on]="filter() === 'agency'" (click)="filter.set('agency')">Agencies · {{ count('agency') }}</span>
+    </div>
+
+    <table class="q">
+      <thead><tr><th>Date</th><th>Brand</th><th>Asked by</th><th>Whose</th><th>Level</th><th>Snapshot</th><th>Follow-up</th></tr></thead>
+      <tbody>
+        @for (r of shown(); track r.brand) {
+          <tr>
+            <td class="small">{{ r.date }}</td>
+            <td><b>{{ r.brand }}</b>@if (r.note) {<br><span class="small muted">{{ r.note }}</span>}</td>
+            <td class="small">{{ r.requester }}</td>
+            <td class="small">{{ whoseLabel[r.whose] }}</td>
+            <td><span class="bucket-chip" [style.background]="bk(r.score, 12).tint" [style.color]="bk(r.score, 12).color">{{ bk(r.score, 12).label }}</span> <span class="small muted">{{ r.score }}/12</span></td>
+            <td class="small">{{ r.live ? 'Current' : 'Expired · details kept' }}</td>
+            <td>
+              @if (r.followUp === 'new') {
+                <button [id]="'draft-' + r.brand.split('.')[0]" class="btn sm" (click)="draft(r.brand)">Draft follow-up</button>
+              } @else {
+                <span class="chip {{ followChip[r.followUp] }}">{{ followLabel[r.followUp] }}</span>
+              }
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+    <p class="small muted" style="margin-top:12px">Follow-ups are drafted for you to read and send yourself. Competitor snapshots never contact the audited brand. Raw review and page text is deleted when a snapshot expires; the findings, counts and links are kept.</p>
+  </div>
+</div>

@@ -1,0 +1,62 @@
+<div class="console">
+  <gt-console-nav active="settings" />
+  <div class="main">
+    <div class="eyebrow">Principal console</div>
+    <h2 style="font-size:28px;margin:8px 0 4px">Settings</h2>
+    <p class="small muted" style="margin:0 0 16px">How the engine behaves on your behalf. Changes apply to new snapshots and reports, never to ones you have already signed.</p>
+
+    <div class="settings">
+      <section class="card set">
+        <h3>Free snapshots</h3>
+        <div class="set-row"><div><b>Keep a snapshot current for</b><span class="small muted">Anyone asking about the same brand in this window gets the same snapshot.</span></div>
+          <div class="seg">
+            @for (d of [14, 30, 60]; track d) {<span [id]="'cache-' + d" role="button" style="cursor:pointer" [class.on]="cacheDays() === d" (click)="cacheDays.set($any(d)); saved.set(false)">{{ d }} days</span>}
+          </div></div>
+        <div class="set-row"><div><b>Competitor snapshots</b><span class="small muted">When someone audits a brand that is not theirs.</span></div>
+          <div class="seg">
+            <span id="competitor-auto" role="button" style="cursor:pointer" [class.on]="competitorSnapshots() === 'auto'" (click)="competitorSnapshots.set('auto'); saved.set(false)">Send automatically</span>
+            <span id="competitor-hold" role="button" style="cursor:pointer" [class.on]="competitorSnapshots() === 'hold'" (click)="competitorSnapshots.set('hold'); saved.set(false)">Hold for my review</span>
+          </div></div>
+        <div class="set-row"><div><b>Fresh scan on request</b><span class="small muted">Who can skip the cached snapshot.</span></div><span class="small">Paying and monitoring clients only</span></div>
+      </section>
+
+      <section class="card set">
+        <h3>Score levels</h3>
+        <p class="small muted" style="margin:0 0 8px">Where each level ends, as a share of the points that could be checked. The same cut-offs apply out of 12 and out of 15.</p>
+        @for (b of buckets; track b.id; let i = $index) {
+          <div class="set-row"><div><b [style.color]="b.color">{{ b.label }}</b><span class="small muted">{{ b.meaning }}</span></div>
+            <div style="display:flex;align-items:center;gap:6px" class="small">
+              @if (i < 3) {
+                <span>{{ i === 0 ? 'under' : 'up to' }}</span><input [id]="'cutoff-' + b.id" class="input num" type="number" min="1" max="99" [value]="cutoffs()[i]" (change)="setCutoff(i, $any($event.target).value)"><span>%</span>
+              } @else { <span>{{ range(3) }}</span> }
+            </div></div>
+        }
+      </section>
+
+      <section class="card set">
+        <h3>Prices</h3>
+        <div class="set-row"><div><b>Alignment Diagnostic</b><span class="small muted">One fixed fee, shown on every snapshot’s upgrade screen.</span></div>
+          <div class="price-in"><span>$</span><input id="price-diagnostic" class="input num" type="number" placeholder="Set by you"></div></div>
+        <div class="set-row"><div><b>Monitoring · monthly</b><span class="small muted">Per month, cancel anytime.</span></div>
+          <div class="price-in"><span>$</span><input id="price-monthly" class="input num" type="number" placeholder="Set by you"></div></div>
+        <div class="set-row"><div><b>Monitoring · quarterly</b><span class="small muted">Per quarter.</span></div>
+          <div class="price-in"><span>$</span><input id="price-quarterly" class="input num" type="number" placeholder="Set by you"></div></div>
+      </section>
+
+      <section class="card set">
+        <h3>Leaders’ questions</h3>
+        <p class="small muted" style="margin:0 0 8px">Their first answers are the starting line. Ask again only when:</p>
+        <label class="set-check"><input id="reask-promise" type="checkbox" [checked]="reask().promise" (change)="toggle('promise')"> A brand says its promise changed (from an alert)</label>
+        <label class="set-check"><input id="reask-new-leader" type="checkbox" [checked]="reask().newLeader" (change)="toggle('newLeader')"> A new leader joins (that person only)</label>
+        <label class="set-check"><input id="reask-yearly" type="checkbox" [checked]="reask().yearly" (change)="toggle('yearly')"> Once a year, at renewal</label>
+        <label class="set-check"><input id="reask-quarterly" type="checkbox" [checked]="reask().quarterly" (change)="toggle('quarterly')"> A one-question check-in each quarter</label>
+        <div class="set-row" style="border-bottom:none"><div><b>Alerts and reports</b><span class="small muted">Always held for your sign-off.</span></div><span class="small">On · cannot be turned off</span></div>
+      </section>
+    </div>
+
+    <div style="display:flex;gap:10px;align-items:center;margin-top:16px">
+      <button id="save-settings" class="btn" (click)="saved.set(true)">Save changes</button>
+      @if (saved()) { <span class="chip teal">Saved</span> }
+    </div>
+  </div>
+</div>

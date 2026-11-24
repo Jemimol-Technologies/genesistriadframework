@@ -1,9 +1,5 @@
 <div class="console">
-  <div class="side">
-    <div class="wm"><img alt="" src="logo.png">GENESIS TRIAD</div>
-    <a class="on">Review queue <b>2</b></a><a>Snapshots</a><a>Clients</a><a>Monitoring</a><a>Pattern library</a><a>Settings</a>
-    <div class="me"><b>Felix Chandran G</b>Principal</div>
-  </div>
+  <gt-console-nav active="queue" />
   <div class="main">
     <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px">
       <div>
@@ -31,13 +27,16 @@
                   [class.hot]="r.key === 'emotional' && b === 1"
                   [class.pulse]="r.key === 'emotional' && b === 1 && !emotionalOverridden()"
                   [class.sq]="r.key === 'emotional' && b === 1"
-                  [attr.title]="b + ' · ' + bandLabel[b]" (click)="s.setBand(r.key, b)">{{ b }}</span>
+                  [attr.title]="b + ' · ' + bandLabel[b]" [class.locked]="signedState()" (click)="!signedState() && s.setBand(r.key, b)">{{ b }}</span>
           }
         </div>
         <div class="small">
           {{ r.evidence }}
+          <a class="rev-open" [id]="'open-' + r.key" [routerLink]="['/console/review/freshbox', r.key]">
+            <span style="color:var(--teal)">{{ counts(r.key).pos }} positive</span> · <span style="color:var(--red)">{{ counts(r.key).neg }} negative</span> · <span style="color:var(--amber)">{{ counts(r.key).unsure }} can’t conclude</span> · <b>Open evidence →</b></a>
+          @if (s.ruled()[r.key]; as st) {<span class="chip" style="margin-left:6px" [class.teal]="st === 'agreed'" [class.red]="st === 'changed'">✓ {{ st === 'agreed' ? 'Agreed' : 'Changed' }}</span>}
           @if (r.key === 'emotional') {
-            <div class="override" [class.show]="emotionalOverridden()">Your call: {{ s.proposed.emotional }} → {{ s.bands().emotional }} · “Tone shift is a pattern across 3 months, not noise.” · logged 21 Nov, 15:12</div>
+            <div class="override" [class.show]="emotionalOverridden()">Your call: {{ s.proposed.emotional }} → {{ s.bands().emotional }} · “{{ s.reasons().emotional }}” · logged 21 Nov, 15:12</div>
           }
         </div>
         <div>
@@ -47,13 +46,43 @@
       </div>
     }
 
+    @if (signedState()) {
+      <div class="signed-banner">
+        <div><b>Signed and sent to FreshBox Kitchens</b><div class="small">Thu 3 Dec 2026, 16:05 · Priya R. has been emailed · {{ s.signedOverridden().length }} of 5 scores adjusted, reasons included</div></div>
+        <button id="back-to-queue" class="btn ghost sm" routerLink="/console/queue">Back to the queue</button>
+      </div>
+    } @else {
     <div style="display:flex;gap:10px;align-items:center;margin-top:18px;flex-wrap:wrap">
       <span class="small muted">
-        @if (emotionalOverridden()) { Override logged. The report will show which bands you adjusted, and why. }
-        @else { Tip: click a band to make your call — every override is logged with your reason. }
+        @if (emotionalOverridden()) { Change logged. The report will show which scores you adjusted, and why. }
+        @else { Open a check to see its evidence and how it was scored. {{ ruledCount() }} of 5 ruled. Every change is logged with your reason. }
       </span>
       <span style="flex:1"></span>
-      <button class="btn teal hot" [class.pulse]="emotionalOverridden()" routerLink="/diagnostic/freshbox">Approve &amp; sign report ✓</button>
+      <button id="approve-sign" class="btn teal hot" [class.pulse]="emotionalOverridden()" (click)="confirming.set(true)">Approve &amp; sign report ✓</button>
     </div>
+    }
   </div>
 </div>
+
+@if (confirming()) {
+  <gt-modal labelledBy="sign-title" closeId="close-sign" closeLabel="Close without signing" (dismissed)="confirming.set(false)">
+    <div class="pad">
+      <div class="eyebrow">FreshBox Kitchens · Alignment Diagnostic</div>
+      <h2 id="sign-title" style="font-size:28px;margin:10px 0 12px;padding-right:36px">Sign and send this report?</h2>
+      <gt-score-meter [score]="s.total()" [max]="15" [believed]="12" [compact]="true" helpId="score-help-sign" />
+      <div class="card" style="padding:14px 16px;margin-top:12px;background:#fafaf8">
+        <b style="font-size:13.5px">Your changes to the engine’s proposal</b>
+        @for (k of s.overridden(); track k) {
+          <div class="sum-row"><span>{{ nameOf(k) }}: {{ bandLabel[s.proposed[k]] }} ({{ s.proposed[k] }}) → {{ bandLabel[s.bands()[k]] }} ({{ s.bands()[k] }})</span><span class="small muted">{{ s.reasons()[k] ? '“' + s.reasons()[k] + '”' : 'Reason recorded' }}</span></div>
+        } @empty {
+          <p class="small muted" style="margin:6px 0 0">None. You are signing the engine’s proposal as it stands.</p>
+        }
+      </div>
+      <p class="small muted" style="margin:12px 0 0">Signing locks these scores, adds your name to the report and emails Priya R. at FreshBox. It cannot be unsigned; a correction becomes a new version.</p>
+      <div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap">
+        <button id="confirm-sign" class="btn teal hot pulse" (click)="sign()">Sign and send ✓</button>
+        <button class="btn ghost" (click)="confirming.set(false)">Keep reviewing</button>
+      </div>
+    </div>
+  </gt-modal>
+}

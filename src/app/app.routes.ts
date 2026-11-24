@@ -13,6 +13,14 @@ import { ReviewScreenComponent } from './screens/review/review.component';
 import { ReportScreenComponent } from './screens/report/report.component';
 import { MonitorScreenComponent } from './screens/monitor/monitor.component';
 import { MonitoringOfferComponent } from './screens/monitoring-offer/monitoring-offer.component';
+import { SignInScreenComponent } from './screens/sign-in/sign-in.component';
+import { ConsoleSnapshotsComponent } from './screens/console-snapshots/console-snapshots.component';
+import { ConsoleClientsComponent } from './screens/console-clients/console-clients.component';
+import { ConsoleMonitoringComponent } from './screens/console-monitoring/console-monitoring.component';
+import { ReviewCheckScreenComponent } from './screens/review-check/review-check.component';
+import { ReviewScoreScreenComponent } from './screens/review-score/review-score.component';
+import { ConsoleAlertComponent } from './screens/console-alert/console-alert.component';
+import { ConsoleSettingsComponent } from './screens/console-settings/console-settings.component';
 
 /** Brand-facing audit site and Felix's console, as one clickable wireframe. Paths mirror the real product's. */
 export const routes: Routes = [
@@ -34,9 +42,19 @@ export const routes: Routes = [
   { path: 'upgrade', redirectTo: 'r/SNP-2611-0417/upgrade' },
   { path: 'diagnostic/evidence', component: ConnectScreenComponent, title: 'Inside evidence · Genesis Triad' },
   { path: 'diagnostic/submitted', component: SubmittedScreenComponent, title: 'Submitted · Genesis Triad' },
-  // Felix's console: his own app. No brand-side button leads here; the story reaches it by address.
+  // Felix's console: his own app, reached by signing in from the landing page. No brand-side button leads here.
+  { path: 'sign-in', component: SignInScreenComponent, title: 'Sign in · Genesis Triad console' },
+  { path: 'console', redirectTo: 'console/queue', pathMatch: 'full' },
+  { path: 'console/snapshots', component: ConsoleSnapshotsComponent, title: 'Free snapshots · Genesis Triad console' },
+  { path: 'console/clients', component: ConsoleClientsComponent, title: 'Clients · Genesis Triad console' },
+  { path: 'console/monitoring', component: ConsoleMonitoringComponent, title: 'Monitoring · Genesis Triad console' },
+  { path: 'console/monitoring/alert/:alert', component: ConsoleAlertComponent, title: 'Drift alert · Genesis Triad console' },
+  { path: 'console/settings', component: ConsoleSettingsComponent, title: 'Settings · Genesis Triad console' },
   { path: 'console/queue', component: QueueScreenComponent, title: 'Review queue · Genesis Triad console' },
   { path: 'console/review/freshbox', component: ReviewScreenComponent, title: 'Signal review · Genesis Triad console' },
+  // Drill-down per check: its evidence, then how that evidence became the level.
+  { path: 'console/review/freshbox/:check', component: ReviewCheckScreenComponent, title: 'Check evidence · Genesis Triad console' },
+  { path: 'console/review/freshbox/:check/score', component: ReviewScoreScreenComponent, title: 'How the score was reached · Genesis Triad console' },
   {
     path: 'diagnostic/freshbox', component: ReportScreenComponent, title: 'Alignment report · Genesis Triad',
     // "Keep it aligned": the monitoring offer as a modal over the report.

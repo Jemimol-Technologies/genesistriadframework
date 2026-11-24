@@ -1,0 +1,81 @@
+<div class="console">
+  <gt-console-nav active="queue" />
+  @if (file(); as f) {
+  <div class="main">
+    <a class="crumb" id="back-to-review" routerLink="/console/review/freshbox">← Signal review · FreshBox Kitchens</a>
+    <nav class="check-tabs" aria-label="Checks">
+      @for (c of files; track c.key) {
+        <a [id]="'tab-' + c.key" [routerLink]="['/console/review/freshbox', c.key]" [class.on]="c.key === f.key">{{ c.name }}
+          @if (c.confidence < 0.7) {<i class="dot-amber" title="Engine is unsure"></i>}
+          @if (s.ruled()[c.key]) {<i class="tick">✓</i>}</a>
+      }
+    </nav>
+
+    <div class="cf-head">
+      <div>
+        <div class="eyebrow">Check {{ files.indexOf(f) + 1 }} of 5 · feeds {{ f.feeds }}</div>
+        <h2>{{ f.name }}: <em>{{ f.question }}</em></h2>
+      </div>
+      <div class="cf-verdict">
+        <div class="small muted">Engine proposes</div>
+        <div class="cf-level">{{ bandLabel[s.proposed[f.key]] }} <span>({{ s.proposed[f.key] }})</span></div>
+        <span class="small" [style.color]="f.confidence < 0.7 ? 'var(--amber)' : 'var(--teal)'">{{ pct(f.confidence) }} sure</span>
+        @if (s.bands()[f.key] !== s.proposed[f.key]) {<div class="chip red" style="margin-top:6px">Your level: {{ bandLabel[s.bands()[f.key]] }} ({{ s.bands()[f.key] }})</div>}
+      </div>
+    </div>
+
+    <div class="card cf-reading">
+      <b>The engine’s reading</b>
+      <p>{{ f.reading }}</p>
+    </div>
+
+    <div class="cf-balance" aria-label="Evidence by weight">
+      @for (l of leans; track l) {
+        <i [style.flex]="weightOf(l)" [style.background]="lean[l].color" [attr.title]="lean[l].short + ': ' + weightOf(l)"></i>
+      }
+    </div>
+    <div class="cf-legend small muted">
+      @for (l of leans; track l) {<span><i [style.background]="lean[l].color"></i>{{ lean[l].short }} · {{ itemsOf(l).length }} {{ itemsOf(l).length === 1 ? 'item' : 'items' }}, weight {{ weightOf(l) }}</span>}
+    </div>
+
+    <div class="cf-cols">
+      @for (l of leans; track l) {
+        <section class="cf-col" [id]="'col-' + l">
+          <h3 [style.color]="lean[l].color">{{ lean[l].label }} <span class="muted">({{ itemsOf(l).length }})</span></h3>
+          @if (l === 'unsure') {<p class="small muted cf-note">Left out of the score. Each one also lowers the engine’s confidence. You can make the call.</p>}
+          @for (i of itemsOf(l); track i.id) {
+            <article class="ev" [id]="'ev-' + i.id" [style.border-left-color]="lean[l].color">
+              <div class="ev-text">{{ i.text }}</div>
+              <div class="ev-meta">
+                <span>{{ i.source }}</span>
+                <span class="ev-from" [class.yours]="i.from === 'yours'" [class.leaders]="i.from === 'leaders'">{{ from[i.from] }}</span>
+                <span class="ev-weight" [attr.title]="weight[i.weight].why">@for (d of dots(i.weight); track $index) {<i [class.on]="d"></i>} {{ weight[i.weight].label }}</span>
+              </div>
+              @if (i.why) {<div class="ev-why"><b>Why it can’t tell:</b> {{ i.why }}</div>}
+              @if (l === 'unsure') {
+                @if (s.calls()[i.id]; as c) {
+                  <div class="ev-call" [class.neg]="c === 'neg'">Your call: counts as {{ c === 'pos' ? 'positive' : 'negative' }}
+                    @if (!locked()) {<button type="button" class="linkish" (click)="s.call(i.id, null)">Undo</button>}</div>
+                } @else if (!locked()) {
+                  <div class="ev-actions">
+                    <button type="button" class="btn ghost sm" [id]="'call-pos-' + i.id" (click)="s.call(i.id, 'pos')">Counts as positive</button>
+                    <button type="button" class="btn ghost sm" [id]="'call-neg-' + i.id" (click)="s.call(i.id, 'neg')">Counts as negative</button>
+                  </div>
+                }
+              }
+            </article>
+          } @empty {<p class="small muted">None.</p>}
+        </section>
+      }
+    </div>
+
+    <div class="cf-foot">
+      <span class="small muted">
+        @if (withCalls()!.level !== engine()!.level) {With your calls the evidence now reads <b>{{ bandLabel[withCalls()!.level] }} ({{ withCalls()!.level }})</b>, not {{ bandLabel[engine()!.level] }}.}
+        @else {Weight: {{ weight[3].label }} = {{ weight[3].why.toLowerCase() }}; {{ weight[1].label }} = {{ weight[1].why.toLowerCase() }}.}
+      </span>
+      <button class="btn hot" [id]="'to-score-' + f.key" [routerLink]="['/console/review/freshbox', f.key, 'score']">How this became a score →</button>
+    </div>
+  </div>
+  }
+</div>
