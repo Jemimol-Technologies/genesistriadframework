@@ -12,7 +12,6 @@ export const FINDING_KIND: Record<FindingKind, {
   undertold: { label: 'Under-told', chip: 'teal', border: 'var(--teal)', vsColor: 'var(--teal)', verdict: 'exceeds', meter: 'var(--teal)' },
 };
 
-export const BAND_LABEL: Record<Band, string> = { 0: 'Critical', 1: 'Weak', 2: 'Stable', 3: 'Strong' };
 
 /** Finding ids are positions in the snapshot's list (store values, used in the address). */
 export type FindingId = 'f1' | 'f2' | 'f3';

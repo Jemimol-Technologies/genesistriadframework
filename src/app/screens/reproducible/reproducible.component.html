@@ -11,26 +11,27 @@
       <div class="small muted">Browses live each time, judges in one pass</div>
       <div class="runlist">
         @for (v of chatRuns; track $index) {
-          <div><span>Run {{ $index + 1 }}</span><span class="bar"><i [style.width]="width(v)" style="background:var(--sand)"></i></span><b>{{ v }}</b></div>
+          <div><span>Run {{ $index + 1 }}</span><span class="bar" [style.background]="track"><i [style.width]="width(v)" [style.background]="bk(v).color"></i></span><b>{{ v }}</b><span class="bucket-chip" [style.background]="bk(v).tint" [style.color]="bk(v).color">{{ bk(v).label }}</span></div>
         }
       </div>
-      <div class="small" style="margin-top:10px;color:var(--deep)">Spread of 3 points — larger than most real changes.</div>
+      <div class="small" style="margin-top:10px;color:var(--deep)">Spread of 3 points, enough to jump from <b>Pulling apart</b> to <b>Almost there</b> and back with nothing changed.</div>
     </div>
     <div class="runbox" style="border:2px solid var(--teal)">
       <span class="chip teal">Triad Audit Engine</span>
-      <h3 style="margin-top:10px">5 runs on SNP-2611-0417</h3>
+      <h3 style="margin-top:10px">5 runs on your 21 Nov snapshot</h3>
       <div class="small muted">Frozen evidence · recorded judgements · fixed scoring rules</div>
       <div class="runlist">
         @for (v of engineRuns(); track $index) {
-          <div><span>Run {{ $index + 1 }}</span><span class="bar"><i [style.width]="width(v)" style="background:var(--teal);transition:width .4s"></i></span><b>{{ v ?? '·' }}</b></div>
+          <div><span>Run {{ $index + 1 }}</span><span class="bar" [style.background]="track"><i [style.width]="width(v)" [style.background]="v === null ? 'transparent' : bk(v).color" style="transition:width .4s"></i></span><b>{{ v ?? '·' }}</b>@if (v !== null) {<span class="bucket-chip" [style.background]="bk(v).tint" [style.color]="bk(v).color">{{ bk(v).label }}</span>} @else {<span></span>}</div>
         }
       </div>
-      <div class="hash" style="margin-top:10px">result fingerprint · 7c1e…a90f (identical ×5)</div>
+      <div class="small" style="margin-top:10px;color:var(--teal)"><b>Pulling apart</b>, 6 of 12, every time. All five runs gave exactly the same result, finding for finding.</div>
+      <div class="hash" style="margin-top:4px" title="Each result is sealed with a checksum (7c1e…a90f). All five checksums match.">ref SNP-2611-0417</div>
     </div>
   </div>
   <div style="display:flex;gap:10px;margin-top:20px;align-items:center;flex-wrap:wrap">
     <button id="run-again" class="btn ghost sm" (click)="rerun()">↻ Run it again</button>
-    <span class="small muted">When the score moves next month, you'll see exactly which evidence moved it.</span>
+    <span class="small muted">When your level changes next month, you will see exactly which evidence moved it.</span>
     <span style="flex:1"></span>
     <button id="get-full-audit" class="btn red hot pulse" (click)="upgrade()">Get the full audit →</button>
   </div>

@@ -14,6 +14,7 @@
       <div style="text-align:right">
         <div class="small muted">Score after your calls</div>
         <div style="font-family:var(--serif);font-size:38px;line-height:1">{{ s.total() }}<span style="font-size:18px;color:var(--grey)"> / 15</span></div>
+        <span class="bucket-chip" style="margin-top:6px" [style.background]="bk(s.total(), 15).tint" [style.color]="bk(s.total(), 15).color">{{ bk(s.total(), 15).label }}</span>
       </div>
     </div>
     <div class="rev-head">
@@ -30,7 +31,7 @@
                   [class.hot]="r.key === 'emotional' && b === 1"
                   [class.pulse]="r.key === 'emotional' && b === 1 && !emotionalOverridden()"
                   [class.sq]="r.key === 'emotional' && b === 1"
-                  (click)="s.setBand(r.key, b)">{{ b }}</span>
+                  [attr.title]="b + ' · ' + bandLabel[b]" (click)="s.setBand(r.key, b)">{{ b }}</span>
           }
         </div>
         <div class="small">

@@ -1,12 +1,13 @@
 import { Component, inject } from '@angular/core';
 import { NavigationEnd, Route, Router, RouterOutlet } from '@angular/router';
 import { filter } from 'rxjs';
+import { ScoreGuideComponent } from './shared/score-guide.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet],
-  template: '<main class="screen"><router-outlet /></main>',
+  imports: [RouterOutlet, ScoreGuideComponent],
+  template: '<main class="screen"><router-outlet /></main><gt-score-guide />',
 })
 export class AppComponent {
   private screen?: Route | null;

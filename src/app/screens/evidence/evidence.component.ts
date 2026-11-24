@@ -1,5 +1,6 @@
 import { Component, HostListener, OnDestroy, OnInit, computed, effect, inject, input, signal, untracked } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
+import { lockScroll, unlockScroll } from '../../shared/scroll-lock';
 import { Router } from '@angular/router';
 import { READINGS, Reading, pickState } from '../../audit.model';
 import { FINDING_IDS, FINDING_KIND, FindingId, SCENARIOS } from '../snapshot/snapshot.data';
@@ -33,8 +34,8 @@ export class EvidenceScreenComponent implements OnInit, OnDestroy {
   }
 
   /** The report underneath stays put while the panel scrolls. */
-  ngOnInit(): void { this.doc.documentElement.classList.add('panel-open'); }
-  ngOnDestroy(): void { this.doc.documentElement.classList.remove('panel-open'); }
+  ngOnInit(): void { lockScroll(this.doc); }
+  ngOnDestroy(): void { unlockScroll(this.doc); }
 
   pct(v: number): string { return `${Math.round(v * 100)}%`; }
 

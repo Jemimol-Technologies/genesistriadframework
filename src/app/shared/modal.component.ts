@@ -1,5 +1,6 @@
 import { Component, HostListener, OnDestroy, OnInit, inject, input, output, signal } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
+import { lockScroll, unlockScroll } from './scroll-lock';
 
 /** Matches the .modal-layer.leaving animation. */
 const FADE_OUT_MS = 160;
@@ -31,8 +32,8 @@ export class ModalComponent implements OnInit, OnDestroy {
   readonly leaving = signal(false);
 
   /** The screen underneath stays put while the modal scrolls. */
-  ngOnInit(): void { this.doc.documentElement.classList.add('panel-open'); }
-  ngOnDestroy(): void { this.doc.documentElement.classList.remove('panel-open'); }
+  ngOnInit(): void { lockScroll(this.doc); }
+  ngOnDestroy(): void { unlockScroll(this.doc); }
 
   @HostListener('document:keydown.escape')
   close(): void {

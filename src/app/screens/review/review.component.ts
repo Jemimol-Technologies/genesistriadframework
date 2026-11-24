@@ -1,6 +1,7 @@
 import { Component, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ReviewService } from '../../review.service';
+import { BAND_LABEL, bucketOf } from '../../score.model';
 import { Band, SignalKey } from '../../audit.model';
 
 interface ReviewRow { key: SignalKey; name: string; evidence: string; confidence: number; }
@@ -13,6 +14,8 @@ interface ReviewRow { key: SignalKey; name: string; evidence: string; confidence
 })
 export class ReviewScreenComponent {
   readonly s = inject(ReviewService);
+  readonly bk = bucketOf;
+  readonly bandLabel = BAND_LABEL;
   readonly bandValues: Band[] = [0, 1, 2, 3];
   /** Calls below this confidence are flagged for the principal. */
   readonly threshold = 0.7;

@@ -27,7 +27,7 @@
   </div>
   <div class="freeze" [class.on]="frozen()">
     <div class="lock">⌘</div>
-    <div style="flex:1"><b>@if (mode() === 'hit') {Cached snapshot SNP-2611-0417} @else {Evidence frozen as snapshot SNP-2611-0417}</b><br><span class="small muted">21 Nov 2026, 10:42 IST · 519 items · every score from here on reads this exact snapshot · cached for 30 days</span></div>
+    <div style="flex:1"><b>@if (mode() === 'hit') {Already scanned: your snapshot of 21 Nov 2026} @else {Evidence frozen: your snapshot of 21 Nov 2026}</b><br><span class="small muted">10:42 IST · 519 items · every score from here on reads this exact evidence · kept for 30 days</span><br><span class="hash">ref SNP-2611-0417</span></div>
     <button class="btn red hot" [class.pulse]="frozen()" [disabled]="!frozen()" [style.opacity]="frozen() ? 1 : .4" routerLink="/r/SNP-2611-0417">See my snapshot →</button>
   </div>
 </div>

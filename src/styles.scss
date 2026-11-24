@@ -188,6 +188,32 @@ html.panel-open{overflow:hidden}
 .alert-box{margin-top:12px;padding:10px 12px;border-radius:10px;background:#fafaf8;border:1px solid var(--line2)}
 .plain-list{margin:0;padding-left:18px;font-size:13.5px;line-height:1.8}
 
+/* score meter: bucket first, number second */
+.sm{margin:10px 0 4px}
+.sm-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.sm-bucket{font-family:var(--serif);font-weight:400;font-size:34px;line-height:1.1}
+.sm-num{font-family:var(--serif);font-size:24px}.sm-num span{font-size:16px;color:var(--grey)}
+.sm-bar{position:relative;display:flex;gap:3px;margin:20px 0 6px;height:14px}
+.sm-seg{border-radius:5px;min-width:0}
+.sm-labels{display:flex;gap:3px;margin-bottom:10px}
+.sm-labels span{min-width:0;text-align:center;font-size:10.5px;line-height:1.25;opacity:.75}
+.sm-labels span.on{font-weight:700;opacity:1}
+.sm-here{position:absolute;top:-12px;width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;border-top:9px solid var(--ink);transform:translateX(-50%)}
+.sm-believed{position:absolute;top:-5px;bottom:-5px;width:0;border-left:2px dashed #8a7448;transform:translateX(-1px)}
+.sm-legend{display:flex;align-items:center;flex-wrap:wrap;gap:4px 8px;font-size:12px;color:var(--grey)}
+.sm-dot{width:9px;height:9px;border-radius:50%;display:inline-block}
+.sm-dash{width:14px;border-top:2px dashed #8a7448;display:inline-block;margin-left:8px}
+.sm-meaning{margin:8px 0 0;font-size:14px;color:var(--ink)}
+.sm-help{margin-top:8px;padding:0;border:none;background:none;color:var(--teal);font-size:12.5px;font-weight:700;text-decoration:underline;text-underline-offset:3px}
+.sm-compact .sm-bucket{font-size:24px}.sm-compact .sm-num{font-size:18px}.sm-compact .sm-bar{height:10px;margin:16px 0 10px}
+/* bucket chip, for tables */
+.bucket-chip{display:inline-block;font-size:11.5px;font-weight:700;padding:2px 8px;border-radius:999px;white-space:nowrap}
+/* score guide */
+.guide-buckets{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:18px}
+.guide-bucket{border:1px solid var(--line);border-top:4px solid;border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:2px;background:#fff}
+.guide-bucket b{font-family:var(--serif);font-weight:400;font-size:19px}
+.guide-bucket p{margin:6px 0 0}
+
 /* console */
 .console{display:grid;grid-template-columns:210px 1fr;flex:1}
 .side{background:#fafaf8;border-right:1px solid var(--line2);padding:20px 16px;font-size:13.5px}
@@ -217,7 +243,8 @@ table.q tr.click:hover td{background:#fcf6f6}
 .runbox{border:1px solid var(--line);border-radius:12px;padding:18px;background:#fff}
 .runbox h3{font-size:19px;margin-bottom:4px}
 .runlist{margin-top:12px}
-.runlist div{display:grid;grid-template-columns:64px 1fr 42px;gap:10px;align-items:center;font-size:13px;padding:6px 0;border-bottom:1px solid var(--line2)}
+.runlist div{display:grid;grid-template-columns:52px minmax(0,1fr) 24px 96px;gap:10px;align-items:center;font-size:13px;padding:6px 0;border-bottom:1px solid var(--line2)}
+.runlist .bucket-chip{justify-self:start}
 .runlist .bar{height:8px;border-radius:4px;background:var(--line2);position:relative}
 .runlist .bar i{position:absolute;left:0;top:0;bottom:0;border-radius:4px}
 .runlist b{font-family:var(--serif);font-weight:400;font-size:17px;text-align:right}
@@ -271,6 +298,7 @@ img,svg{max-width:100%}
   .console{grid-template-columns:minmax(0,1fr)}.side{display:none}
   .main{min-width:0}
   .grid3,.pillars{grid-template-columns:1fr}
+  .guide-buckets{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
   .sheet-cols{display:none}
   .sheet-row{grid-template-columns:minmax(0,1fr);gap:10px}
   .sheet-k{display:block;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--grey);font-weight:700;margin-bottom:2px}

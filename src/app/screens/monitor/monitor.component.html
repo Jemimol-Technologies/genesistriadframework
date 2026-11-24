@@ -10,18 +10,20 @@
   <div class="split split-monitor">
     <div class="card" style="padding:18px">
       <div style="display:flex;justify-content:space-between;font-size:12.5px" class="muted"><span>Your score (what the evidence says) vs your starting line (what leaders believed)</span><span>{{ feb() ? 'monthly' : cadenceLabel() }} re-scan</span></div>
-      <svg viewBox="0 0 520 220" style="display:block;width:100%;height:auto;max-height:300px;margin-top:8px" role="img"
+      <svg viewBox="0 0 600 220" style="display:block;width:100%;height:auto;max-height:300px;margin-top:8px" role="img"
            [attr.aria-label]="feb() ? 'Score rising from 6 to 10 over four months against a starting line of 12' : 'Score of 6 in November against a starting line of 12; next re-scan in January'">
+        <!-- the four buckets as background bands, labelled in the right gutter -->
+        @for (b of bands; track b.id) {
+          <rect x="40" [attr.y]="b.top" width="460" [attr.height]="b.bottom - b.top" [attr.fill]="b.tint" opacity=".7"/>
+          <text x="508" [attr.y]="(b.top + b.bottom) / 2 + 4" font-family="Arial" font-size="10.5" font-weight="700" [attr.fill]="b.color">{{ b.label }}</text>
+        }
         <g font-family="Arial" font-size="10" fill="#777">
           <line x1="40" y1="20" x2="500" y2="20" stroke="#ecebe7"/><text x="10" y="24">15</text>
-          <line x1="40" y1="80" x2="500" y2="80" stroke="#ecebe7"/><text x="10" y="84">10</text>
-          <line x1="40" y1="140" x2="500" y2="140" stroke="#ecebe7"/><text x="16" y="144">5</text>
           <line x1="40" y1="200" x2="500" y2="200" stroke="#dddcd8"/><text x="16" y="204">0</text>
           <text x="60" y="216">Nov</text><text x="200" y="216">Dec</text><text x="340" y="216">Jan</text><text x="470" y="216">Feb</text>
         </g>
         <line x1="40" y1="56" x2="500" y2="56" stroke="#d8c7a3" stroke-width="2" stroke-dasharray="6 5"/>
-        <text x="392" y="50" font-family="Arial" font-size="10" fill="#8a7448">starting line · 12</text>
-        @if (gapFill()) { <path [attr.d]="gapFill()" fill="#e32323" opacity=".06"/> }
+        <text x="300" y="50" font-family="Arial" font-size="10" fill="#8a7448">leaders believed · Aligned (12)</text>
         @if (points().length > 1) { <path [attr.d]="path()" fill="none" stroke="#176b63" stroke-width="3"/> }
         @else { <path [attr.d]="'M70 ' + y(6) + ' L480 ' + y(6)" fill="none" stroke="#c3dcd8" stroke-width="2" stroke-dasharray="2 6"/> }
         @for (p of points(); track p.m) {
@@ -30,10 +32,11 @@
         }
       </svg>
       @if (feb()) {
-        <div class="small muted">Gap to the starting line: 6 → 2 · narrowing. The Triad is holding.</div>
+        <div class="small muted"><b style="color:var(--red)">Pulling apart (6)</b> → <b style="color:#b7791f">Almost there (10)</b>. Gap to the starting line: 6 → 2, narrowing.</div>
       } @else {
-        <div class="small muted">Gap to the starting line: 6. First re-scan {{ firstRescan() }}.</div>
+        <div class="small muted"><b style="color:var(--red)">Pulling apart (6)</b>. Gap to the starting line: 6. First re-scan {{ firstRescan() }}.</div>
       }
+      <button type="button" class="sm-help" id="score-help-monitor" (click)="guide.open.set(true)">ⓘ What do these levels mean?</button>
       <div class="baseline-note">
         <b>Starting line:</b> your leaders’ answers from 25 Nov 2026. It stays fixed so each re-scan measures real change. Next yearly review: Nov 2027.
       </div>

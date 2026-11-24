@@ -1,5 +1,7 @@
-import { Component, computed, effect, input, signal, untracked } from '@angular/core';
+import { Component, computed, effect, inject, input, signal, untracked } from '@angular/core';
 import { MONITOR_STAGES, MonitorStage, pickState } from '../../audit.model';
+import { BUCKETS } from '../../score.model';
+import { ScoreGuideService } from '../../shared/score-guide.service';
 
 /** What the brand does about a drift alert (store values). */
 type AlertCall = 'open' | 'confirm-rebaseline' | 'rebaseline-sent' | 'fixing';
@@ -15,6 +17,7 @@ type AlertCall = 'open' | 'confirm-rebaseline' | 'rebaseline-sent' | 'fixing';
   templateUrl: './monitor.component.html',
 })
 export class MonitorScreenComponent {
+  readonly guide = inject(ScoreGuideService);
   readonly state = input<string | null>(null);
   readonly stage = computed<MonitorStage>(() => pickState(this.state() ?? null, MONITOR_STAGES, 'start'));
   readonly feb = computed(() => this.stage() === 'feb');
@@ -31,10 +34,6 @@ export class MonitorScreenComponent {
     return this.feb() ? all : all.slice(0, 1);
   });
   readonly path = computed(() => this.points().map((p, i) => `${i ? 'L' : 'M'}${p.x} ${this.y(p.v)}`).join(' '));
-  readonly gapFill = computed(() => {
-    const p = this.points();
-    return p.length > 1 ? `${this.path()} L${p[p.length - 1].x} ${this.y(12)} L${p[0].x} ${this.y(12)} Z` : '';
-  });
 
   readonly alert = signal<AlertCall>('open');
   readonly leaders = ['Priya R.', 'Arjun M.', 'Meera S.'];
@@ -42,6 +41,12 @@ export class MonitorScreenComponent {
   constructor() {
     effect(() => { this.stage(); untracked(() => this.alert.set('open')); }, { allowSignalWrites: true });
   }
+
+  /** The buckets as chart bands (score 0–15 on the y axis). */
+  readonly bands = BUCKETS.map((b, i) => {
+    const lo = i === 0 ? 0 : BUCKETS[i - 1].below * 15, hi = Math.min(b.below, 1) * 15;
+    return { ...b, top: this.y(hi), bottom: this.y(lo) };
+  });
 
   /** Score (0–15) to chart y. */
   y(v: number): number { return 200 - v * 12; }

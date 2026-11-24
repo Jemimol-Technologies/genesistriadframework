@@ -29,8 +29,7 @@
   <div>
     <div class="card report-ready">
       <div class="eyebrow" style="color:var(--teal)">Your Genesis Triad Alignment Score™</div>
-      <div class="score" style="margin:10px 0 2px"><b>{{ s.signedTotal() }}</b><span>/ 15</span></div>
-      <p class="small muted" style="margin:0 0 14px">Your leaders believed 12. The evidence says {{ s.signedTotal() }}. That gap is your starting line.</p>
+      <gt-score-meter [score]="s.signedTotal()" [max]="15" [believed]="12" helpId="score-help-ready" />
       <div class="sum-row"><span>What to fix first</span><b>Make the delivery promise true</b></div>
       <div class="sum-row"><span>Corrections in the report</span><span>4, weakest first</span></div>
       <div class="sum-row" style="border-bottom:none"><span>Signed by</span><span class="sig-inline">Felix Chandran G</span></div>
@@ -47,7 +46,7 @@
       <div class="sum-row"><span>Website analytics</span><span class="st-ok">Connected ✓</span></div>
       <div class="sum-row"><span>Business metrics</span><span class="st-ok">Uploaded ✓</span></div>
       <div class="sum-row"><span>Support conversations</span><span class="small muted">Skipped · scored conservatively</span></div>
-      <div class="sum-row"><span>Your free snapshot SNP-2611-0417</span><span class="small muted">The “before” picture</span></div>
+      <div class="sum-row"><span>Your free snapshot of 21 Nov</span><span class="small muted">The “before” picture</span></div>
 
       <div class="eyebrow" style="color:var(--teal);margin-top:18px">Leaders’ answers</div>
       <div class="sum-row"><span>Priya R. (you)</span><span class="chip teal">5 of 5</span></div>

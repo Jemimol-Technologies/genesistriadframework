@@ -1,12 +1,14 @@
 import { Component, computed, inject, input } from '@angular/core';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { READINGS, Reading, pickState } from '../../audit.model';
-import { BAND_LABEL, FINDING_KIND, FindingId, SCENARIOS } from './snapshot.data';
+import { FINDING_KIND, FindingId, SCENARIOS } from './snapshot.data';
+import { BAND_LABEL } from '../../score.model';
+import { ScoreMeterComponent } from '../../shared/score-meter.component';
 
 @Component({
   selector: 'gt-snapshot-screen',
   standalone: true,
-  imports: [RouterLink, RouterOutlet],
+  imports: [RouterLink, RouterOutlet, ScoreMeterComponent],
   templateUrl: './snapshot.component.html',
 })
 export class SnapshotScreenComponent {

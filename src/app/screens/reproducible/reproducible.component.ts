@@ -1,6 +1,7 @@
 import { Component, inject, input, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { ModalComponent } from '../../shared/modal.component';
+import { BUCKETS, bucketOf } from '../../score.model';
 
 @Component({
   selector: 'gt-reproducible-screen',
@@ -18,6 +19,11 @@ export class ReproducibleScreenComponent {
   back(): void { this.router.navigate(['/r/SNP-2611-0417', this.finding() || 'f1'], { queryParamsHandling: 'preserve' }); }
   /** Swap straight to the subscribe modal over the same snapshot. */
   upgrade(): void { this.router.navigate(['/r/SNP-2611-0417', 'upgrade'], { queryParamsHandling: 'preserve' }); }
+
+  /** Runs are snapshot scores, out of 12. */
+  bk(v: number) { return bucketOf(v, 12); }
+  /** The bar's track shows the four levels faintly: 30% · 30% · 20% · 20%. */
+  readonly track = `linear-gradient(90deg, ${BUCKETS[0].tint} 0 30%, ${BUCKETS[1].tint} 30% 60%, ${BUCKETS[2].tint} 60% 80%, ${BUCKETS[3].tint} 80% 100%)`;
 
   readonly chatRuns = [7, 9, 6, 8, 7];
   readonly engineRuns = signal<(number | null)[]>([6, 6, 6, 6, 6]);

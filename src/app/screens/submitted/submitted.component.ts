@@ -3,6 +3,7 @@ import { Title } from '@angular/platform-browser';
 import { RouterLink } from '@angular/router';
 import { DIAGNOSTIC_STAGES, DiagnosticStage, pickState } from '../../audit.model';
 import { ReviewService } from '../../review.service';
+import { ScoreMeterComponent } from '../../shared/score-meter.component';
 
 /**
  * What Priya sees after "Submit for analysis". Felix's console is never shown to her.
@@ -11,7 +12,7 @@ import { ReviewService } from '../../review.service';
 @Component({
   selector: 'gt-submitted-screen',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, ScoreMeterComponent],
   templateUrl: './submitted.component.html',
 })
 export class SubmittedScreenComponent {
